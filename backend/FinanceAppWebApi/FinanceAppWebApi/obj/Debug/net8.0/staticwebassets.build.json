@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "qhWn5uLpQkfLVfDo5M+IjVuY5pTG58zyJNG4uGlNvwk=",
+  "Source": "FinanceAppWebApi",
+  "BasePath": "_content/FinanceAppWebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
