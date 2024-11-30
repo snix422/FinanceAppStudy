@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAppWebApi.Controllers
 {
+    [ApiController]
+    [Route("api/categories")]
     public class CategoriesController : Controller
     {
         private readonly FinanceAppDbContext _context;
@@ -14,7 +16,7 @@ namespace FinanceAppWebApi.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("/all")]
         public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -24,7 +26,7 @@ namespace FinanceAppWebApi.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("category/{id}")]
         public async Task<ActionResult<Category>> GetCategoryById(int id)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);

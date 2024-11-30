@@ -7,6 +7,8 @@ using System.Security.Claims;
 
 namespace FinanceAppWebApi.Controllers
 {
+    [ApiController]
+    [Route("api/budgets")]
     public class BudgetController : Controller
     {
         private readonly FinanceAppDbContext _context;
@@ -20,7 +22,7 @@ namespace FinanceAppWebApi.Controllers
             return User.FindFirstValue(ClaimTypes.NameIdentifier); // Zwróci ID użytkownika z claims
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("/user/{userId}")]
         public async Task<ActionResult<IEnumerable<Budget>>> GetAllBudgets(int userId)
         {
             //var userId = int.Parse(GetCurrentUserId());
@@ -34,7 +36,7 @@ namespace FinanceAppWebApi.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/budget/{id}")]
         public async Task<ActionResult<IEnumerable<Budget>>> GetBudgetById(int id)
         {
 
@@ -62,7 +64,7 @@ namespace FinanceAppWebApi.Controllers
             return CreatedAtAction(nameof (GetBudgetById), budget);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/budget/{id}")]
         public async Task<ActionResult> DeleteBudget(int id)
         {
             var userId = int.Parse(GetCurrentUserId());

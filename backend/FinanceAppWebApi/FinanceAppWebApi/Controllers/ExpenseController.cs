@@ -6,6 +6,8 @@ using System.Security.Claims;
 
 namespace FinanceAppWebApi.Controllers
 {
+    [ApiController]
+    [Route("api/expenses")]
     public class ExpenseController : Controller
     {
         private readonly FinanceAppDbContext _context;
