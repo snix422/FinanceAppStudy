@@ -168,3 +168,4 @@ C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\Finance
 C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\obj\Debug\net8.0\FinanceAppWebApi.genruntimeconfig.cache
 C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\obj\Debug\net8.0\ref\FinanceAppWebApi.dll
 C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

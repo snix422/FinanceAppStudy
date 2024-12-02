@@ -25,8 +25,10 @@ const SignInPage = () => {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify({
+                   
                     email:formData.email,
                     password:formData.password
+                    
                 })
             })
 
@@ -36,6 +38,7 @@ const SignInPage = () => {
                 return
             }
             const data = await response.json();
+            console.log(data);
             reset();
         } catch (error) {
             setLoginError("Wystąpił problem z logowaniem")
