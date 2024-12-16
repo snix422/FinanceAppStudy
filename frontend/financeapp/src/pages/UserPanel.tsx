@@ -6,11 +6,12 @@ const UserPanel = () => {
     const [isOpenModal, setIsOpenModal] = useState(false)
 
     const fetchBudgets = async () => {
+      
         try {
-            const response = await fetch('http://localhost:5054/api/user/budgets', {
+            const response = await fetch('http://localhost:5054/user/budgets', {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
                     'Content-Type': 'application/json',
                 },
             });

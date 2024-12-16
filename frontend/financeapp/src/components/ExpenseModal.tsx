@@ -26,7 +26,7 @@ const ExpenseModal = () => {
 
     const onSubmit : SubmitHandler<ExpenseInputs> = async (formData:ExpenseInputs) => {
         setError("")
-        const amount = parseFloat(formData.amount);
+        const amount = parseFloat(formData.amount.replace(",", "."));
     if (isNaN(amount)) {
         setError("Invalid amount format.");
         return;
@@ -36,9 +36,9 @@ const ExpenseModal = () => {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify({
-                   description:formData.description,
-                   amount:amount,
-                   category:formData.category
+                   Description:formData.description,
+                   Amount:amount,
+                   Category:formData.category
                 })
             })
 

@@ -39,10 +39,10 @@ const BudgetModal = () => {
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Dodanie tokena
                 },
                 body:JSON.stringify({
-                   title:formData.title,
-                   price:formData.price,
-                   startBudget:formData.startBudget,
-                   endBudget:formData.endBudget                  
+                   Title:formData.title,
+                   Price:formData.price,
+                   StartBudget:formData.startBudget,
+                   EndBudget:formData.endBudget                  
                 })
             })
 

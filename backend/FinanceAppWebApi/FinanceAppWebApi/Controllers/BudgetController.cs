@@ -25,7 +25,7 @@ namespace FinanceAppWebApi.Controllers
         }
 
         [HttpGet("/user/budgets")]
-        [Authorize]
+       
         public async Task<ActionResult<IEnumerable<Budget>>> GetAllBudgets()
         {
             var userIdClaim = User.FindFirst("userId"); // "userId" to nazwa claim w tokenie
