@@ -39,6 +39,7 @@ const SignInPage = () => {
             }
             const data = await response.json();
             console.log(data);
+            localStorage.setItem("authToken",data)
             reset();
         } catch (error) {
             setLoginError("Wystąpił problem z logowaniem")

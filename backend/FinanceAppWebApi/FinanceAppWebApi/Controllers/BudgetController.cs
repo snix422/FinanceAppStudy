@@ -1,5 +1,7 @@
 ﻿using FinanceAppWebApi.Data;
+using FinanceAppWebApi.DTOs;
 using FinanceAppWebApi.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
@@ -8,7 +10,7 @@ using System.Security.Claims;
 namespace FinanceAppWebApi.Controllers
 {
     [ApiController]
-    [Route("api/budgets")]
+    [Route("/api")]
     public class BudgetController : Controller
     {
         private readonly FinanceAppDbContext _context;
@@ -22,15 +24,26 @@ namespace FinanceAppWebApi.Controllers
             return User.FindFirstValue(ClaimTypes.NameIdentifier); // Zwróci ID użytkownika z claims
         }
 
-        [HttpGet("/user/{userId}")]
-        public async Task<ActionResult<IEnumerable<Budget>>> GetAllBudgets(int userId)
+        [HttpGet("/user/budgets")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Budget>>> GetAllBudgets()
         {
-            //var userId = int.Parse(GetCurrentUserId());
+            var userIdClaim = User.FindFirst("userId"); // "userId" to nazwa claim w tokenie
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
 
-            var budgets = _context.Budgets
-                            .Where(b => b.UserId == userId)
-                            .Include(b => b.Expenses)
-                            .ToList();
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+            {
+                return BadRequest("Invalid user ID in token.");
+            }
+
+            // Pobieranie budżetów dla użytkownika
+            var budgets = await _context.Budgets
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Expenses)
+                .ToListAsync();
 
             return Ok(budgets);
 
@@ -51,17 +64,36 @@ namespace FinanceAppWebApi.Controllers
             return Ok(budget);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Budget>> CreateBudget([FromBody] Budget budget)
+        [HttpPost("/budget/create")]
+        public async Task<ActionResult<Budget>> CreateBudget([FromBody] BudgetDTO budget)
         {
+            if (!DateTime.TryParse(budget.StartDate, out var startDate))
+            {
+                return BadRequest("Invalid start date format.");
+            }
+            if (!DateTime.TryParse(budget.EndDate, out var endDate))
+            {
+                return BadRequest("Invalid end date format.");
+            }
+            if (!decimal.TryParse(budget.TotalAmount, out var totalAmount))
+            {
+                return BadRequest("Invalid total amount format.");
+            }
+
             var userId = int.Parse(GetCurrentUserId());
+            var newBudget = new Budget
+            {
+                Title = budget.Title,
+                TotalAmount = totalAmount,
+                StartDate = startDate,
+                EndDate = endDate,
+                UserId = userId,
+            };
 
-            budget.UserId = userId;
-
-            _context.Budgets.Add(budget);
+            _context.Budgets.Add(newBudget);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof (GetBudgetById), budget);
+            return CreatedAtAction(nameof(GetBudgetById), new { id = newBudget.Id }, budget);
         }
 
         [HttpDelete("/budget/{id}")]

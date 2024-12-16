@@ -1,7 +1,13 @@
 const HomePage = () => {
+    const token = localStorage.getItem("authToken")
+    console.log(token)
+
+    
+   
     return(
         <main>
-            <h1>Strona główna</h1>
+           <h1>Strona główna</h1>
+           
         </main>
     )
 }

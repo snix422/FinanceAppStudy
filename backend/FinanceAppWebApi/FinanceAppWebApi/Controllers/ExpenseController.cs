@@ -1,4 +1,5 @@
 ﻿using FinanceAppWebApi.Data;
+using FinanceAppWebApi.DTOs;
 using FinanceAppWebApi.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ using System.Security.Claims;
 namespace FinanceAppWebApi.Controllers
 {
     [ApiController]
-    [Route("api/expenses")]
+    [Route("/api")]
     public class ExpenseController : Controller
     {
         private readonly FinanceAppDbContext _context;
@@ -37,21 +38,42 @@ namespace FinanceAppWebApi.Controllers
             return Ok(expenses);
         }
 
-        [HttpPost("{budgetId}/expenses")]
-        public async Task<ActionResult<Expense>> CreateExpense(int budgetId, [FromBody] Expense expense)
+        [HttpPost("{budgetId}/expense/create")]
+        public async Task<ActionResult<Expense>> CreateExpense(int budgetId, [FromBody] ExpenseDTO expenseDTO)
         {
             var userId = int.Parse(GetCurrentUserId());
 
+            // Sprawdź, czy budżet należy do użytkownika
             var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == userId);
+            if (budget == null)
+            {
+                return NotFound("Nie znaleziono budżetu.");
+            }
 
-            if (budget == null) return NotFound("Nie znaleziono budżetu");
+            // Znajdź kategorię po nazwie
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(c => c.Title == expenseDTO.Category);
 
-            expense.BudgetId = budgetId;
+            if (category == null)
+            {
+                return BadRequest("Nie znaleziono kategorii o podanej nazwie.");
+            }
+
+            // Tworzenie nowego Expense
+            var expense = new Expense
+            {
+                Description = expenseDTO.Description,
+                Amount = expenseDTO.Amount,
+                DateTime = DateTime.UtcNow, // Możesz ustawić aktualny czas
+                BudgetId = budgetId,
+                CategoryId = category.Id, // Ustawienie ID kategorii
+                Category = category        // Możesz również ustawić obiekt Category, jeśli jest to wymagane
+            };
+
             _context.Expenses.Add(expense);
             await _context.SaveChangesAsync();
 
             return Ok(expense);
-
         }
 
         [HttpDelete("{budgetId}/expense/{id}")]
