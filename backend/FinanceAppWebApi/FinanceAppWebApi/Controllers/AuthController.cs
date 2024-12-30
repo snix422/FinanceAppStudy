@@ -121,7 +121,7 @@ namespace FinanceAppWebApi.Controllers
     };
 
             // Tworzymy token JWT
-            var token = new JwtSecurityToken(
+            var token = new JwtSecurityToken( 
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
