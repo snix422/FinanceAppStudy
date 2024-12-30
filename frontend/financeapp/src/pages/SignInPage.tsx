@@ -38,8 +38,17 @@ const SignInPage = () => {
                 return
             }
             const data = await response.json();
-            console.log(data);
-            localStorage.setItem("authToken",data)
+            const { token, name, role } = data;
+
+            // Zapisz token i inne dane w localStorage jako JSON
+            localStorage.setItem("authToken", token);
+            localStorage.setItem(
+                "userData",
+                JSON.stringify({
+                    name,
+                    role,
+                })
+            );
             reset();
         } catch (error) {
             setLoginError("Wystąpił problem z logowaniem")

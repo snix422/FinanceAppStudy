@@ -6,25 +6,39 @@ const UserPanel = () => {
     const [isOpenModal, setIsOpenModal] = useState(false)
 
     const fetchBudgets = async () => {
-      
+        // Wyświetl token w konsoli (dla debugowania)
+        const token = localStorage.getItem("authToken");
+        console.log("Auth Token:", token);
+    
+        // Sprawdź, czy token istnieje
+        if (!token) {
+            setError("Brak tokenu uwierzytelniającego. Zaloguj się ponownie.");
+            return;
+        }
+    
         try {
             const response = await fetch('http://localhost:5054/user/budgets', {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                    Authorization: `Bearer ${token}`, // Przekazanie tokena
                     'Content-Type': 'application/json',
                 },
             });
     
             if (!response.ok) {
-                throw new Error('Failed to fetch budgets');
+                if (response.status === 401) {
+                    setError("Nieautoryzowany dostęp. Zaloguj się ponownie.");
+                } else {
+                    setError("Problem z pobraniem budżetów.");
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
     
             const data = await response.json();
-            setBudgets(data);
+            setBudgets(data); // Ustawienie danych w stanie
         } catch (error) {
-            console.error(error);
-            setError("Problem z wczytaniem budżetu ")
+            console.error("Błąd podczas pobierania budżetów:", error);
+            setError("Problem z wczytaniem budżetu.");
         }
     };
     
