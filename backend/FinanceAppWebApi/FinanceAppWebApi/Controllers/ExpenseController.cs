@@ -27,6 +27,8 @@ namespace FinanceAppWebApi.Controllers
         {
             var userId = int.Parse(GetCurrentUserId());
 
+            if(userId == null) return Unauthorized("Użytkownik nie zalogowany");
+
             var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == userId);
 
             if (budget == null) return NotFound("Nie znaleziono budżetu");
@@ -43,14 +45,16 @@ namespace FinanceAppWebApi.Controllers
         {
             var userId = int.Parse(GetCurrentUserId());
 
-            // Sprawdź, czy budżet należy do użytkownika
+            if (userId == null) return Unauthorized("Użytkownik nie zalogowany");
+
+          
             var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == userId);
             if (budget == null)
             {
                 return NotFound("Nie znaleziono budżetu.");
             }
 
-            // Znajdź kategorię po nazwie
+            
             var category = await _context.Categories
                 .FirstOrDefaultAsync(c => c.Title == expenseDTO.Category);
 
@@ -59,15 +63,14 @@ namespace FinanceAppWebApi.Controllers
                 return BadRequest("Nie znaleziono kategorii o podanej nazwie.");
             }
 
-            // Tworzenie nowego Expense
+           
             var expense = new Expense
             {
                 Description = expenseDTO.Description,
                 Amount = expenseDTO.Amount,
-                DateTime = DateTime.UtcNow, // Możesz ustawić aktualny czas
+                DateTime = DateTime.UtcNow, 
                 BudgetId = budgetId,
-                CategoryId = category.Id, // Ustawienie ID kategorii
-                Category = category        // Możesz również ustawić obiekt Category, jeśli jest to wymagane
+                CategoryId = category.Id,      
             };
 
             _context.Expenses.Add(expense);

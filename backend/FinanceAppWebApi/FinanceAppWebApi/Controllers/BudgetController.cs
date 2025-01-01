@@ -28,20 +28,24 @@ namespace FinanceAppWebApi.Controllers
        
         public async Task<ActionResult<IEnumerable<Budget>>> GetAllBudgets()
         {
-            var userIdClaim = User.FindFirst("userId"); // "userId" to nazwa claim w tokenie
-            if (userIdClaim == null)
+            var userEmailClaim = User.FindFirst("Email");
+            if (userEmailClaim == null || string.IsNullOrEmpty(userEmailClaim.Value))
             {
-                return Unauthorized("User ID not found in token.");
+                return Unauthorized("Email not found in token.");
             }
 
-            if (!int.TryParse(userIdClaim.Value, out var userId))
+            var userEmail = userEmailClaim.Value;
+
+            // Pobieranie użytkownika z bazy danych
+            var user = await _context.Users.FirstOrDefaultAsync(i => i.Email == userEmail);
+            if (user == null)
             {
-                return BadRequest("Invalid user ID in token.");
+                return NotFound("User not found.");
             }
 
             // Pobieranie budżetów dla użytkownika
             var budgets = await _context.Budgets
-                .Where(b => b.UserId == userId)
+                .Where(b => b.UserId == user.Id)
                 .Include(b => b.Expenses)
                 .ToListAsync();
 
@@ -54,6 +58,11 @@ namespace FinanceAppWebApi.Controllers
         {
 
             var userId = int.Parse(GetCurrentUserId());
+            if(userId == null)
+            {
+                return Unauthorized("Użytkownik nie jest zalogowany");
+            }
+
             var budget = _context.Budgets
                             .Where(b => b.Id == id &&  b.UserId == userId)
                             .Include(b => b.Expenses)
@@ -80,7 +89,18 @@ namespace FinanceAppWebApi.Controllers
                 return BadRequest("Invalid total amount format.");
             }
 
+            if (endDate < startDate)
+            {
+                return BadRequest("End date must be after start date.");
+            }
+
             var userId = int.Parse(GetCurrentUserId());
+
+            if (userId == null)
+            {
+                return Unauthorized("Użytkownik nie został zalogowany");
+            }
+
             var newBudget = new Budget
             {
                 Title = budget.Title,
