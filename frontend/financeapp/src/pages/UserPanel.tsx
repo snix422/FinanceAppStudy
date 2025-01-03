@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import BudgetModal from "../components/BudgetModal"
 
 const UserPanel = () => {
     const [budgets,setBudgets] = useState([])
@@ -55,6 +56,7 @@ const UserPanel = () => {
             {budgets ? <div>
                 <h2>Twoje budżety</h2>
             </div> : <h2>Brak budżetów</h2>}
+            <BudgetModal isOpen={isOpenModal} />
             <button onClick={toggleModal}>Dodaj budżet</button>
         </main>
     )

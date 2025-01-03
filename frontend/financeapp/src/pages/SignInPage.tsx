@@ -40,6 +40,8 @@ const SignInPage = () => {
             const data = await response.json();
             const { token, name, role } = data;
 
+            console.log(data);
+
             // Zapisz token i inne dane w localStorage jako JSON
             localStorage.setItem("authToken", token);
             localStorage.setItem(

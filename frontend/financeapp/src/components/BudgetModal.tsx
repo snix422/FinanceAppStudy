@@ -10,7 +10,7 @@ interface BudgetModalInputs {
     endBudget:string
 }
 
-const BudgetModal = () => {
+const BudgetModal = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<BudgetModalInputs>();
     const [error,setError] = useState("")
 
@@ -40,9 +40,9 @@ const BudgetModal = () => {
                 },
                 body:JSON.stringify({
                    Title:formData.title,
-                   Price:formData.price,
-                   StartBudget:formData.startBudget,
-                   EndBudget:formData.endBudget                  
+                   TotalAmount:formData.price,
+                   StartDate:formData.startBudget,
+                   EndDate:formData.endBudget                  
                 })
             })
 
@@ -64,7 +64,7 @@ const BudgetModal = () => {
     }
 
     return(
-        <Modal open={false}>
+        <Modal open={props.isOpen}>
         <form onSubmit={handleSubmit(onSubmit)}>
             <input type="text" {...register("title",BudgetOptions.title)} placeholder="Wpisz nazwę budżetu" />
             <input type="text" {...register("price",BudgetOptions.price)} placeholder="Wpisz kwotę dostępnego budżetu" />

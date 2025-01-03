@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
+using BudgetDTO = FinanceAppWebApi.Entities.BudgetDTO;
+using ExpenseDTO = FinanceAppWebApi.Entities.ExpenseDTO;
 
 namespace FinanceAppWebApi.Controllers
 {
@@ -28,7 +30,7 @@ namespace FinanceAppWebApi.Controllers
        
         public async Task<ActionResult<IEnumerable<Budget>>> GetAllBudgets()
         {
-            var userEmailClaim = User.FindFirst("Email");
+            var userEmailClaim = User.Claims.First(c => c.Type == ClaimTypes.Email);
             if (userEmailClaim == null || string.IsNullOrEmpty(userEmailClaim.Value))
             {
                 return Unauthorized("Email not found in token.");
@@ -44,10 +46,22 @@ namespace FinanceAppWebApi.Controllers
             }
 
             // Pobieranie budżetów dla użytkownika
-            var budgets = await _context.Budgets
+            /*var budgets = await _context.Budgets
                 .Where(b => b.UserId == user.Id)
                 .Include(b => b.Expenses)
-                .ToListAsync();
+                .ToListAsync();*/
+
+            var budgets = await _context.Budgets
+       .Where(b => b.UserId == user.Id)
+       .Include(b => b.Expenses)
+       .Select(b => new BudgetDTO
+       {
+           Id = b.Id,
+           Name = b.Title,
+           Amount = b.TotalAmount,
+           Expenses = b.Expenses.ToList()
+       })
+       .ToListAsync();
 
             return Ok(budgets);
 
@@ -84,7 +98,7 @@ namespace FinanceAppWebApi.Controllers
             {
                 return BadRequest("Invalid end date format.");
             }
-            if (!decimal.TryParse(budget.TotalAmount, out var totalAmount))
+           if (!decimal.TryParse(budget.TotalAmount, out var totalAmount))
             {
                 return BadRequest("Invalid total amount format.");
             }
