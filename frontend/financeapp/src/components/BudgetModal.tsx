@@ -2,6 +2,8 @@ import { Modal } from "@mui/material"
 import { title } from "process";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form"
+import "../styles/BudgetModal.css"
+import closeImg from "../assets/close.png"
 
 interface BudgetModalInputs {
     title:string,
@@ -51,9 +53,11 @@ const BudgetModal = (props:any) => {
                 setError(errorData);
                 return
             }
-            const data = await response.json();
-            console.log(data);
-            localStorage.setItem("authToken",data)
+            //const data = await response.json();
+            //console.log(data);
+            //localStorage.setItem("authToken",data)
+            props.closeModal(false);
+            props.refreshBudgets();
             reset();
         } catch (error) {
             setError("Wystąpił problem z logowaniem")
@@ -64,13 +68,14 @@ const BudgetModal = (props:any) => {
     }
 
     return(
-        <Modal open={props.isOpen}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <Modal className="modal-container" open={props.isOpen}>
+        <form className="form" onSubmit={handleSubmit(onSubmit)}>
             <input type="text" {...register("title",BudgetOptions.title)} placeholder="Wpisz nazwę budżetu" />
             <input type="text" {...register("price",BudgetOptions.price)} placeholder="Wpisz kwotę dostępnego budżetu" />
             <input type="date" {...register("startBudget",BudgetOptions.startBudget)} placeholder="Data zaczęcia budżetu" />
             <input type="date" {...register("endBudget",BudgetOptions.endBudget)}placeholder="Data zakończenia budżetu" />
             <button type="submit">Dodaj budżet</button>
+            <img className="close-img" src={closeImg} alt="close-icon" onClick={()=>props.closeModal(false)} />
         </form>
         </Modal>
     )

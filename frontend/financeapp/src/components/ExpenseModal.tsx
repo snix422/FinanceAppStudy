@@ -2,6 +2,7 @@ import { Alert, Modal } from "@mui/material"
 import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import "../styles/ExpenseModal.css"
+import closeImg from "../assets/close.png"
 
 interface ExpenseInputs {
     description:string,
@@ -53,6 +54,8 @@ const ExpenseModal = (props:any) => {
             const data = await response.json();
             console.log(data);
             reset();
+            props.close(false);
+            props.refreshExpenses();
         } catch (error) {
             setError("Wystąpił problem z logowaniem")
             console.log(error)
@@ -75,6 +78,7 @@ const ExpenseModal = (props:any) => {
             </select>
             {errors.category?.message ? <Alert>{errors.amount?.message}</Alert> : null}
             <button type="submit">Dodaj wydatek</button>
+            <img className="close-img" src={closeImg} alt="close-icon" onClick={()=>props.close(false)} />
         </form>
         </Modal>
     )

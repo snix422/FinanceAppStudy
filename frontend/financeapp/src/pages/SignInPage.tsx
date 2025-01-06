@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 interface SignInTypeInputs {
     email:string,
@@ -17,6 +18,8 @@ const SignInPage = () => {
             required:"Hasło jest wymagane"
         }
     }
+
+    const navigate = useNavigate();
 
     const onSubmit : SubmitHandler<SignInTypeInputs> = async (formData:SignInTypeInputs) => {
         setLoginError("")
@@ -51,6 +54,7 @@ const SignInPage = () => {
                     role,
                 })
             );
+            navigate("/")
             reset();
         } catch (error) {
             setLoginError("Wystąpił problem z logowaniem")

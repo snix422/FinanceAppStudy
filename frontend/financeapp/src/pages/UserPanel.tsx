@@ -7,6 +7,12 @@ const UserPanel = () => {
     const [error, setError] = useState("")
     const [isOpenModal, setIsOpenModal] = useState(false)
 
+    const tokenUser = (localStorage?.getItem("userData"));
+
+    const parsedUser = tokenUser ? JSON.parse(tokenUser) : null
+
+    console.log(parsedUser);
+
     const fetchBudgets = async () => {
         // Wyświetl token w konsoli (dla debugowania)
         const token = localStorage.getItem("authToken");
@@ -55,11 +61,12 @@ const UserPanel = () => {
     console.log(budgets)
     return(
         <main>
+            {parsedUser.role.name == "User" ? <h2>User</h2> : <h2>Admin</h2>}
             {budgets ? <div>
                 <h2>Twoje budżety</h2>
                 <BudgetsList budgets={budgets} />
             </div> : <h2>Brak budżetów</h2>}
-            <BudgetModal isOpen={isOpenModal} />
+            <BudgetModal isOpen={isOpenModal} closeModal={setIsOpenModal} refreshBudgets={fetchBudgets} />
             <button onClick={toggleModal}>Dodaj budżet</button>
         </main>
     )
