@@ -13,6 +13,5 @@ namespace FinanceAppWebApi.Entities
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
 
-
     }
 }

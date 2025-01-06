@@ -1,6 +1,7 @@
 import { Alert, Modal } from "@mui/material"
 import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import "../styles/ExpenseModal.css"
 
 interface ExpenseInputs {
     description:string,
@@ -8,19 +9,19 @@ interface ExpenseInputs {
     category:string
 }
 
-const ExpenseModal = () => {
+const ExpenseModal = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<ExpenseInputs>()
     const [error,setError] = useState("")
 
     const ExpenseOptions = {
         description:{
-            required:"Email jest wymagany"
+            required:"Opis jest wymagany"
         },
         amount:{
-            required:"Hasło jest wymagane"
+            required:"Kwota jest wymagana"
         },
         category:{
-            required:"Data rozpoczęcia budżetu jest wymagana"
+            required:"Kategoria budżetu jest wymagana"
         },
     }
 
@@ -32,9 +33,11 @@ const ExpenseModal = () => {
         return;
     }
         try {
-            const response = await fetch(`http://localhost:5054/api/${4}/expense/create`,{
+            const response = await fetch(`http://localhost:5054/api/${props.budgetId}/expense/create`,{
                 method:"POST",
-                headers:{"Content-Type":"application/json"},
+                headers:{"Content-Type":"application/json",
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
                 body:JSON.stringify({
                    Description:formData.description,
                    Amount:amount,
@@ -49,7 +52,6 @@ const ExpenseModal = () => {
             }
             const data = await response.json();
             console.log(data);
-            localStorage.setItem("authToken",data)
             reset();
         } catch (error) {
             setError("Wystąpił problem z logowaniem")
@@ -59,8 +61,8 @@ const ExpenseModal = () => {
         console.log(formData);
     }
     return(
-        <Modal open={false}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <Modal className="modal-container" open={props.isOpen}>
+            <form className="form" onSubmit={handleSubmit(onSubmit)}>
             <input type="text" {...register("description",ExpenseOptions.description)} placeholder="Wpisz opis wydatku" />
             {errors.description?.message ? <Alert>{errors.description.message}</Alert> : null}
             <input type="text" {...register("amount",ExpenseOptions.amount)} placeholder="Wpisz kwotę wydatku" />

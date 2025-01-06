@@ -1,9 +1,12 @@
 ﻿using FinanceAppWebApi.Data;
 using FinanceAppWebApi.DTOs;
 using FinanceAppWebApi.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace FinanceAppWebApi.Controllers
 {
@@ -22,6 +25,7 @@ namespace FinanceAppWebApi.Controllers
             return User.FindFirstValue(ClaimTypes.NameIdentifier); // Zwróci ID użytkownika z claims
         }
 
+        [Authorize]
         [HttpGet("{budgetId}/expenses")]
         public async Task<ActionResult<IEnumerable<Expense>>> GetAllExpensesForBudget(int budgetId)
         {
@@ -40,23 +44,31 @@ namespace FinanceAppWebApi.Controllers
             return Ok(expenses);
         }
 
+        [Authorize]
         [HttpPost("{budgetId}/expense/create")]
         public async Task<ActionResult<Expense>> CreateExpense(int budgetId, [FromBody] ExpenseDTO expenseDTO)
         {
-            var userId = int.Parse(GetCurrentUserId());
+            var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+            Console.WriteLine(userId);
+            if (userId == null)
+            {
+                return Unauthorized("Użytkownik nie jest zalogowany");
+            }
+            if (!int.TryParse(userId.Value, out int idValue))
+            {
+                return BadRequest("Identyfikator użytkownika jest nieprawidłowy");
+            }
 
-            if (userId == null) return Unauthorized("Użytkownik nie zalogowany");
-
-          
-            var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == userId);
+            var budget = await _context.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == idValue);
             if (budget == null)
             {
                 return NotFound("Nie znaleziono budżetu.");
             }
 
+            Console.WriteLine(budget);
             
             var category = await _context.Categories
-                .FirstOrDefaultAsync(c => c.Title == expenseDTO.Category);
+                .FirstOrDefaultAsync(c => c.Title.ToLower() == (expenseDTO.Category).ToLower());
 
             if (category == null)
             {
@@ -76,7 +88,16 @@ namespace FinanceAppWebApi.Controllers
             _context.Expenses.Add(expense);
             await _context.SaveChangesAsync();
 
-            return Ok(expense);
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve, // Zapobiega cyklicznym zależnościom
+                MaxDepth = 32 // Zwiększa maksymalną głębokość serializacji, jeżeli problem jest związany z głębokością
+            };
+
+            // Serializowanie obiektu Expense z ustawionymi opcjami
+            var serializedExpense = JsonSerializer.Serialize(expense, options);
+
+            return new JsonResult(serializedExpense);
         }
 
         [HttpDelete("{budgetId}/expense/{id}")]

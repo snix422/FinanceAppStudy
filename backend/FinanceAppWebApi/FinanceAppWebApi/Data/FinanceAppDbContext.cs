@@ -36,6 +36,13 @@ namespace FinanceAppWebApi.Data
             new Role { Id = 1, Name = "Admin" },
             new Role { Id = 2, Name = "User" }
         );
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = 1, Title="Kredyt"},
+                new Category { Id = 2, Title="Rachunki"},
+                new Category { Id = 3, Title = "Zakupy"},
+                new Category { Id = 4, Title = "Paliwo"}
+                );
         }
     }
 }

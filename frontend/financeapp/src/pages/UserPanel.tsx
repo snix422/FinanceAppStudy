@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import BudgetModal from "../components/BudgetModal"
+import BudgetsList from "../components/BudgetsList"
 
 const UserPanel = () => {
     const [budgets,setBudgets] = useState([])
@@ -51,10 +52,12 @@ const UserPanel = () => {
         setIsOpenModal(prev => !prev);
     }
 
+    console.log(budgets)
     return(
         <main>
             {budgets ? <div>
                 <h2>Twoje budżety</h2>
+                <BudgetsList budgets={budgets} />
             </div> : <h2>Brak budżetów</h2>}
             <BudgetModal isOpen={isOpenModal} />
             <button onClick={toggleModal}>Dodaj budżet</button>

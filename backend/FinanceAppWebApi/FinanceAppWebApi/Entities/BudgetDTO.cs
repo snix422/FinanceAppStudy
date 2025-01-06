@@ -1,12 +1,10 @@
-﻿using FinanceAppWebApi.DTOs;
-
-namespace FinanceAppWebApi.Entities
+﻿namespace FinanceAppWebApi.Entities
 {
-    public class BudgetDTO
+    public class BudgetDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Amount { get; set; }
-        public List<Expense> Expenses { get; set; }
+        public List<ExpensesDto> Expenses { get; set; }
     }
 }
