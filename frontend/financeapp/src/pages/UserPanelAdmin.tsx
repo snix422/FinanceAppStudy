@@ -38,6 +38,28 @@ const UserPanelAdmin = () => {
             setError("Problem z wczytaniem budżetu.");
         }
         };
+
+       
+    const deleteBudget = async () => {
+        try {
+            const response = await fetch(`http://localhost:5054/api/${props.budgetId}/expense/${props.data.id}`,{
+                method:"DELETE",
+                headers:{"Content-Type":"application/json",
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            })
+
+            if(!response.ok){
+                const errorData = await response.json();
+                setError(errorData);
+                return
+            }
+           fetchBudgets();
+        } catch (error) {
+            setError("Wystąpił problem z logowaniem")
+            console.log(error)
+        }
+    }
                 
         useEffect(() => {
             fetchBudgets();
@@ -47,7 +69,7 @@ const UserPanelAdmin = () => {
 
     return(
         <main>
-            <BudgetsList budgets={budgets} />
+            <BudgetsList budgets={budgets} isAdmin={true} deleteBudget={deleteBudget} />
         </main>
     )
 }

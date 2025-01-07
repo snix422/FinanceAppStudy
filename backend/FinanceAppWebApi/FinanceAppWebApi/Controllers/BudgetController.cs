@@ -194,8 +194,12 @@ namespace FinanceAppWebApi.Controllers
         {
             var userId = int.Parse(GetCurrentUserId());
 
-            var budget = await _context.Budgets
+            /*var budget = await _context.Budgets
                             .Where(b => b.Id == id && b.UserId == userId)
+                            .FirstOrDefaultAsync();*/
+
+            var budget = await _context.Budgets
+                            .Where(b => b.Id == id)
                             .FirstOrDefaultAsync();
 
             if (budget == null) return NotFound("Nie znaleziono budżetu");

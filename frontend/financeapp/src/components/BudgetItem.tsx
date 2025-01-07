@@ -7,6 +7,7 @@ const BudgetItem = (props:any) => {
         <Card>
             <h2>{props.title}</h2>
             <Link to={`/budget/${props.id}`}><Button>P0każ szczegóły</Button></Link>
+            {props.isAdmin ? <button onClick={()=>props.deleteBudget()}>Usuń</button> : null}
         </Card>
     )
 }
