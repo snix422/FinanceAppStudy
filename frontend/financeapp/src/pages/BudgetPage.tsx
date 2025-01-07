@@ -81,7 +81,7 @@ const BudgetPage = () => {
             <h3>Kwota budżetu: {budget.amount}</h3>
             <h3>Oszczędności: {savingsTotal}</h3>
             <button onClick={openModal}>Dodaj wydatek</button>
-            <ExpensesList expenses={budget?.expenses} />
+            <ExpensesList expenses={budget?.expenses} budgetId={id} refreshBudgets={fetchBudgets} />
             {isOpenModal ? <ExpenseModal isOpen={isOpenModal} close={setIsOpenModal} budgetId={id} refreshExpenses={fetchBudgets} /> : null}
         </main>
     )

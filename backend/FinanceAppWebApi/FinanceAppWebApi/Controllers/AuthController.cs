@@ -86,6 +86,14 @@ namespace FinanceAppWebApi.Controllers
             });
         }
 
+        [HttpGet("/users")]
+        public async Task<ActionResult<User>> GetAllUsers()
+        {
+            var allUsers = await _context.Users.ToListAsync();
+
+            return Ok(allUsers);
+        }
+
         private string GenerateJwtToken(User user)
         {
             // Sprawdzamy, czy konfiguracja zawiera wymagane wartości

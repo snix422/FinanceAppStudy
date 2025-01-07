@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react"
 import BudgetModal from "../components/BudgetModal"
 import BudgetsList from "../components/BudgetsList"
+import UserView from "../components/UserView"
+import AdminView from "../components/AdminView"
+import { useNavigate } from "react-router-dom"
+import HomePage from "./HomePage"
 
-const UserPanel = () => {
+const RoleBasedLayout = () => {
     const [budgets,setBudgets] = useState([])
     const [error, setError] = useState("")
     const [isOpenModal, setIsOpenModal] = useState(false)
@@ -12,6 +16,8 @@ const UserPanel = () => {
     const parsedUser = tokenUser ? JSON.parse(tokenUser) : null
 
     console.log(parsedUser);
+
+    const navigate = useNavigate();
 
     const fetchBudgets = async () => {
         // Wyświetl token w konsoli (dla debugowania)
@@ -59,17 +65,22 @@ const UserPanel = () => {
     }
 
     console.log(budgets)
+
+    const LogOut = () => {
+        localStorage.removeItem("userData");
+        localStorage.removeItem("authToken");
+        navigate("/");
+    }
+
+    if(!parsedUser){
+        return <HomePage />
+    }
     return(
         <main>
-            {parsedUser.role.name == "User" ? <h2>User</h2> : <h2>Admin</h2>}
-            {budgets ? <div>
-                <h2>Twoje budżety</h2>
-                <BudgetsList budgets={budgets} />
-            </div> : <h2>Brak budżetów</h2>}
-            <BudgetModal isOpen={isOpenModal} closeModal={setIsOpenModal} refreshBudgets={fetchBudgets} />
-            <button onClick={toggleModal}>Dodaj budżet</button>
+            {parsedUser.role.name == "User" ? <UserView /> : <AdminView />}
+            <button onClick={LogOut}>Wyloguj się</button>
         </main>
     )
 }
 
-export default UserPanel 
+export default RoleBasedLayout

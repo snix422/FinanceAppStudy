@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
-import UserPanel from "./UserPanel"
 import { useEffect, useState } from "react"
+import RoleBasedLayout from "./RoleBasedLayout"
 
 const HomePage = () => {
   
@@ -17,7 +17,7 @@ const HomePage = () => {
            {!tokenUser ? <div>
             <Link to={'/signIn'}>Logowanie</Link>
             <Link to={'/signUp'}>Rejestracja</Link>
-            </div> : <UserPanel /> }
+            </div> : <RoleBasedLayout /> }
         </main>
     )
 }

@@ -115,6 +115,37 @@ namespace FinanceAppWebApi.Controllers
             return Ok(budget);
         }
 
+        [HttpGet("user/{id}/budget")]
+        public async Task<ActionResult<BudgetDto>> GetBudgetByUserId(int id)
+        {
+          
+
+            var budget = await _context.Budgets
+                            .Where(b => b.UserId == id)
+                            .Include(b => b.Expenses)
+                            .ThenInclude(e => e.Category)
+                            .Select(b => new BudgetDto
+                            {
+                                Id = b.Id,
+                                Name = b.Title,
+                                Amount = b.TotalAmount,
+                                Expenses = b.Expenses.Select(e => new ExpensesDto
+                                {
+                                    Id = e.Id,
+                                    Description = e.Description,
+                                    Amount = e.Amount,
+                                    CategoryName = e.Category.Title
+                                }).ToList()
+                            })
+                            .ToListAsync();
+
+            if (budget == null) return NotFound("Nie znaleziono wybranego budżetu");
+
+            Console.WriteLine(budget);
+
+            return Ok(budget);
+        }
+
         [HttpPost("/budget/create")]
         public async Task<ActionResult<Budget>> CreateBudget([FromBody] BudgetDTO budget)
         {
