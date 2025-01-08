@@ -10,14 +10,18 @@ const HomePage = () => {
         const token = localStorage.getItem("authToken");
         setTokenUser(token)
     },[localStorage.getItem("authToken")])
+
+    if(tokenUser){
+        return <RoleBasedLayout />
+    }
    
     return(
         <main>
            <h1>Strona główna</h1>
-           {!tokenUser ? <div>
+           { <div>
             <Link to={'/signIn'}>Logowanie</Link>
             <Link to={'/signUp'}>Rejestracja</Link>
-            </div> : <RoleBasedLayout /> }
+            </div>  }
         </main>
     )
 }

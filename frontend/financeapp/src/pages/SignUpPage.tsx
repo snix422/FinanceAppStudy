@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form"
+import { Link } from "react-router-dom";
 
 interface SignUpTypeInputs  {
     name: string,
@@ -82,6 +83,7 @@ const SignUpPage = () => {
                 <button type="submit">Zarejestruj się</button>
                 {registrationError ? <span>{registrationError}</span> : null}
             </form>
+            <Link to={"/"}>Powrót na stronę główną</Link>
         </main>
     )
 }

@@ -27,7 +27,7 @@ const ExpenseItem = (props:any) => {
     return(
         <div>
             <h2>{props.data.description}</h2>
-            <h3>{props.data.amount}</h3>
+            <h3>{props.data.amount} zł</h3>
             <button onClick={deleteExpense}>Delete</button>
         </div>
     )

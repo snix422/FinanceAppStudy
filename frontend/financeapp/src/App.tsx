@@ -7,13 +7,18 @@ import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import BudgetPage from './pages/BudgetPage';
 import UserPanelAdmin from './pages/UserPanelAdmin';
+import RoleBasedLayout from './pages/RoleBasedLayout';
 
 function App() {
+
+  const tokenUser = localStorage.getItem("userData");
+  const isLoggedIn = !!tokenUser;
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={isLoggedIn ? <RoleBasedLayout /> : <HomePage />} />
           <Route path='/signIn' element={<SignInPage />} />
           <Route path='/signUp' element={<SignUpPage />} />
           <Route path='/budget/:id' element={<BudgetPage />} />

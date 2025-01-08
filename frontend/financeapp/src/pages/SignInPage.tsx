@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface SignInTypeInputs {
     email:string,
@@ -74,6 +74,7 @@ const SignInPage = () => {
                 {errors.password?.message ? <span>{errors.password.message}</span>:null}
                 <button type="submit">Zaloguj się</button>
             </form>
+            <Link to={"/"}>Powrót na stronę główną</Link>
         </main>
     )
 }

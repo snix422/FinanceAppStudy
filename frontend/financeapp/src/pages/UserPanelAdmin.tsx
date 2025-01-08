@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import BudgetsList from "../components/BudgetsList";
 
 const UserPanelAdmin = () => {
@@ -40,9 +40,9 @@ const UserPanelAdmin = () => {
         };
 
        
-    const deleteBudget = async () => {
+    const deleteBudget = async (idBudget:any) => {
         try {
-            const response = await fetch(`http://localhost:5054/api/${props.budgetId}/expense/${props.data.id}`,{
+            const response = await fetch(`http://localhost:5054/budget/${idBudget}`,{
                 method:"DELETE",
                 headers:{"Content-Type":"application/json",
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -70,6 +70,7 @@ const UserPanelAdmin = () => {
     return(
         <main>
             <BudgetsList budgets={budgets} isAdmin={true} deleteBudget={deleteBudget} />
+            <Link to={"/"}>Wróć</Link>
         </main>
     )
 }

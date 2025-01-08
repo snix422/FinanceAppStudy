@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ExpenseModal from "../components/ExpenseModal";
 import ExpensesList from "../components/ExpensesList";
 
@@ -83,6 +83,7 @@ const BudgetPage = () => {
             <button onClick={openModal}>Dodaj wydatek</button>
             <ExpensesList expenses={budget?.expenses} budgetId={id} refreshBudgets={fetchBudgets} />
             {isOpenModal ? <ExpenseModal isOpen={isOpenModal} close={setIsOpenModal} budgetId={id} refreshExpenses={fetchBudgets} /> : null}
+            <Link to={"/"}>Powrót na stronę główną</Link>
         </main>
     )
 }
