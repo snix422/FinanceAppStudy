@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import BudgetsList from "./BudgetsList"
 import BudgetModal from "./BudgetModal"
+import "../styles/UserView.css"
 
 const UserView = () => {
 
@@ -54,13 +55,13 @@ const UserView = () => {
         }
         
     return(
-        <main>
-        {budgets ? <div>
-            <h2>Twoje budżety</h2>
+        <main className="userview-page">
+        {budgets ? <div className="userview-container">
+            <h2 className="userview-title">Twoje budżety</h2>
             <BudgetsList budgets={budgets} />
-        </div> : <h2>Brak budżetów</h2>}
+        </div> : <h2 className="no-budgets-title">Brak budżetów</h2>}
         <BudgetModal isOpen={isOpenModal} closeModal={setIsOpenModal} refreshBudgets={fetchBudgets} />
-        <button onClick={toggleModal}>Dodaj budżet</button>
+        <button className="add-budget-button" onClick={toggleModal}>Dodaj budżet</button>
     </main>
     )
 }

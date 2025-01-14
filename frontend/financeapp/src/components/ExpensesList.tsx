@@ -1,11 +1,14 @@
 import ExpenseItem from "./ExpenseItem"
+import "../styles/ExpensesList.css"
 
 const ExpensesList = (props:any) => {
     return(
-        <div>
+        <div className="expenses-container">
+            <div className="expenses-list">
             {props.expenses.map((e:any)=>{
                 return(<ExpenseItem data={e} budgetId={props.budgetId} refreshBudgets={props.refreshBudgets} />)
             })}
+            </div>
         </div>
     )
 }

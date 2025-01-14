@@ -6,6 +6,7 @@ import AdminView from "../components/AdminView"
 import { useNavigate } from "react-router-dom"
 import HomePage from "./HomePage"
 import { Home } from "@mui/icons-material"
+import "../styles/RoleBasedLayout.css"
 
 const RoleBasedLayout = () => {
     const [budgets,setBudgets] = useState([])
@@ -79,7 +80,7 @@ const RoleBasedLayout = () => {
     return(
         <main>
             {parsedUser.role.name == "User" ? <UserView /> : <AdminView />}
-            <button onClick={LogOut}>Wyloguj się</button>
+            <button className="button-logout" onClick={LogOut}>Wyloguj się</button>
         </main>
     )
 }

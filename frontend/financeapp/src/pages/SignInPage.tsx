@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import "../styles/SignInPage.css"
 
 interface SignInTypeInputs {
     email:string,
@@ -28,16 +29,14 @@ const SignInPage = () => {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify({
-                   
                     email:formData.email,
-                    password:formData.password
-                    
+                    password:formData.password  
                 })
             })
 
             if(!response.ok){
                 const errorData = await response.json();
-                setLoginError(errorData);
+                setLoginError(errorData.message);
                 return
             }
             const data = await response.json();
@@ -64,17 +63,20 @@ const SignInPage = () => {
         console.log(formData);
     }
 
+    console.log(loginError)
+
     return(
-        <main>
-            <h1>Logowanie</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <input type="text" {...register("email",loginOptions.email)} placeholder="Wpisz swój email..." />
-                {errors.email?.message ? <span>{errors.email.message}</span>:null}
-                <input type="text" {...register("password",loginOptions.password)} placeholder="Wpisz swoje hasło..." />
-                {errors.password?.message ? <span>{errors.password.message}</span>:null}
-                <button type="submit">Zaloguj się</button>
+        <main className="login-page">
+            <h1 className="login-title">Logowanie</h1>
+            <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+                <input className="input-field" type="text" {...register("email",loginOptions.email)} placeholder="Wpisz swój email..." />
+                {errors.email?.message ? <span className="error-message">{errors.email.message}</span>:null}
+                <input className="input-field" type="text" {...register("password",loginOptions.password)} placeholder="Wpisz swoje hasło..." />
+                {errors.password?.message ? <span className="error-message">{errors.password.message}</span>:null}
+                <button className="submit-button" type="submit">Zaloguj się</button>
+                {loginError == "Invalid email or password." ? <span className="error-message">Nieprawidłowe dane logowania</span> : null}
             </form>
-            <Link to={"/"}>Powrót na stronę główną</Link>
+            <Link className="back-link" to={"/"}>Powrót na stronę główną</Link>
         </main>
     )
 }

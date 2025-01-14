@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router-dom";
+import "../styles/SignUpPage.css"
 
 interface SignUpTypeInputs  {
     name: string,
@@ -67,23 +68,23 @@ const SignUpPage = () => {
         console.log(formData);
     }
     return (
-        <main>
-            <h1>Rejestracja</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <input type="text" {...register("name",validateOptions.name)} placeholder="Wpisz swoje imię..." />
-                {errors.name?.message ? <span>{errors.name?.message}</span> : null}
-                <input type="text" {...register("surname",validateOptions.surname)}placeholder="Wpisz swoje nazwisko..." />
-                {errors.surname?.message ? <span>{errors.surname.message}</span>:null}
-                <input type="text" {...register("email",validateOptions.email)}placeholder="Wpisz swój email..." />
-                {errors.email?.message ? <span>{errors.email.message}</span>:null}
-                <input type="text" {...register("password",validateOptions.password)}placeholder="Wpisz swoje hasło..." />
-                {errors.password?.message ? <span>{errors.password.message}</span>:null}
-                <input type="text" {...register("confirmPassword",validateOptions.confirmPassword)}placeholder="Powtórz hasło" />
-                {errors.confirmPassword?.message ? <span>{errors.confirmPassword.message}</span>:null}
-                <button type="submit">Zarejestruj się</button>
-                {registrationError ? <span>{registrationError}</span> : null}
+        <main className="register-page">
+            <h1 className="register-title">Rejestracja</h1>
+            <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
+                <input className="input-field" type="text" {...register("name",validateOptions.name)} placeholder="Wpisz swoje imię..." />
+                {errors.name?.message ? <span className="error-message">{errors.name?.message}</span> : null}
+                <input className="input-field" type="text" {...register("surname",validateOptions.surname)}placeholder="Wpisz swoje nazwisko..." />
+                {errors.surname?.message ? <span className="error-message">{errors.surname.message}</span>:null}
+                <input className="input-field" type="text" {...register("email",validateOptions.email)}placeholder="Wpisz swój email..." />
+                {errors.email?.message ? <span className="error-message">{errors.email.message}</span>:null}
+                <input className="input-field" type="text" {...register("password",validateOptions.password)}placeholder="Wpisz swoje hasło..." />
+                {errors.password?.message ? <span className="error-message">{errors.password.message}</span>:null}
+                <input className="input-field" type="text" {...register("confirmPassword",validateOptions.confirmPassword)}placeholder="Powtórz hasło" />
+                {errors.confirmPassword?.message ? <span className="error-message">{errors.confirmPassword.message}</span>:null}
+                <button className="submit-button" type="submit">Zarejestruj się</button>
+                {registrationError ? <span className="error-message">{registrationError}</span> : null}
             </form>
-            <Link to={"/"}>Powrót na stronę główną</Link>
+            <Link className="back-link" to={"/"}>Powrót na stronę główną</Link>
         </main>
     )
 }

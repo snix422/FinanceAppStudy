@@ -1,0 +1,84 @@
+/* Stylizacja karty budżetu */
+
+.budget-card {
+    background: linear-gradient(135deg, #ffffff, #f0f0f0);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    margin: 15px;
+    width: 25vw;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.budget-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Nagłówek */
+
+.budget-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+
+/* Przyciski */
+
+.delete-button,
+.details-button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.delete-button {
+    background: #e74c3c;
+    color: white;
+}
+
+.delete-button:hover {
+    background: #c0392b;
+}
+
+.details-button {
+    background: #4ca1af;
+    color: white;
+}
+
+.details-button:hover {
+    background: #3a92a1;
+}
+
+
+/* Link do szczegółów */
+
+.details-link {
+    text-decoration: none;
+}
+
+
+/* Mobilna responsywność */
+
+@media (max-width: 600px) {
+    .budget-card {
+        width: 100%;
+        padding: 15px;
+    }
+    .budget-title {
+        font-size: 1.5rem;
+    }
+    .delete-button,
+    .details-button {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+}

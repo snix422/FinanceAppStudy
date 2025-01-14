@@ -1,0 +1,60 @@
+/* Główne style kontenera */
+
+.budget-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+
+/* Nagłówki */
+
+.budget-container h2 {
+    font-size: 2rem;
+    color: #333;
+}
+
+.budget-container h3 {
+    font-size: 1.5rem;
+    color: #555;
+}
+
+
+/* Link do strony głównej */
+
+.budget-container a {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #4ca1af;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.budget-container a:hover {
+    color: #2c82a1;
+}
+
+
+/* Przycisk "Dodaj wydatek" */
+
+.add-expense {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #4ca1af, #2c82a1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.add-expense:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #2c82a1, #206a8a);
+}

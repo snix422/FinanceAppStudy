@@ -1,0 +1,47 @@
+/* Główne style dla kontenera wydatku */
+
+.expense-item {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    width: 50vw;
+}
+
+.expense-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Opis wydatku */
+
+.expense-item-desc {
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.expense-item-price {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+
+/* Przycisk usuwania */
+
+.btn-delete {
+    padding: 8px 16px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #ff6b6b, #d64545);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}

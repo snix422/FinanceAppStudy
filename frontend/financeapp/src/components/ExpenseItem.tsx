@@ -1,4 +1,6 @@
 import { useState } from "react";
+import "../styles/ExpenseItem.css"
+
 
 const ExpenseItem = (props:any) => {
     const [error,setError] = useState("")
@@ -25,10 +27,10 @@ const ExpenseItem = (props:any) => {
         }
     }
     return(
-        <div>
-            <h2>{props.data.description}</h2>
-            <h3>{props.data.amount} zł</h3>
-            <button onClick={deleteExpense}>Delete</button>
+        <div className="expense-item">
+            <h2 className="expense-item-desc">{props.data.description}</h2>
+            <h3 className="expense-item-price">{props.data.amount} zł</h3>
+            <button className="btn-delete" onClick={deleteExpense}>Delete</button>
         </div>
     )
 }
