@@ -42,8 +42,9 @@
 /* Przycisk "Dodaj wydatek" */
 
 .add-expense {
-    margin-top: 20px;
-    padding: 10px 20px;
+    margin-top: 1rem;
+    margin: 1rem;
+    padding: 1rem;
     font-size: 1rem;
     background: linear-gradient(135deg, #4ca1af, #2c82a1);
     color: white;

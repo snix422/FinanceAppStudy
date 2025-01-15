@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UsersList from "./UsersList";
+import "../styles/AdminView.css"
 
 const AdminView = () => {
 
@@ -43,8 +44,8 @@ const AdminView = () => {
         
     console.log(users);      
     return(
-        <div>
-            <h2>Admin</h2>
+        <div className="admin-page">
+            <h2 className="admin-title">Lista użytkowników</h2>
             <UsersList users={users} />
         </div>
     )

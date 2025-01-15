@@ -70,7 +70,7 @@ const ExpenseModal = (props:any) => {
             {errors.description?.message ? <Alert>{errors.description.message}</Alert> : null}
             <input type="text" {...register("amount",ExpenseOptions.amount)} placeholder="Wpisz kwotę wydatku" />
             {errors.amount?.message ? <Alert>{errors.amount.message}</Alert> : null}
-            <select {...register("category",ExpenseOptions.category)}>
+            <select  {...register("category",ExpenseOptions.category)}>
                 <option value={"kredyt"}>kredyt</option>
                 <option value={"rachunki"}>rachunki</option>
                 <option value={"zakupy"}>zakupy</option>

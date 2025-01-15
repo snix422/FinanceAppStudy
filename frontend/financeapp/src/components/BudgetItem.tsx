@@ -7,7 +7,7 @@ const BudgetItem = (props:any) => {
     return(
         <div className="budget-card">
             <h2 className="budget-title">{props.title}</h2>
-            {props.isAdmin ? <button className="button-delete" onClick={()=>props.deleteBudget(props.id)}>Usuń</button> : <Link className="button-details" to={`/budget/${props.id}`}><Button>P0każ szczegóły</Button></Link>}
+            {props.isAdmin ? <button className="delete-button" onClick={()=>props.deleteBudget(props.id)}>Usuń</button> : <Link className="button-details" to={`/budget/${props.id}`}><Button>P0każ szczegóły</Button></Link>}
         </div>
     )
 }

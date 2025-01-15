@@ -75,6 +75,14 @@
     outline: none;
 }
 
+.form select {
+    width: 30%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
 
 /* Przycisk "Dodaj budżet" */
 
