@@ -12,18 +12,42 @@ const BudgetPage = () => {
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
     const [expensenTotalAmount, setExpensesTotalAmount] = useState<any>(0)
     const [savingsTotal, setSavingsTotal] = useState<any>(0)
+    const [kredytAmount, setKredytAmount] = useState<any>(0)
+    const [zakupyAmount, setZakupyAmount] = useState<any>(0)
+    const [rachunkiAmount, setRachunkiAmount] = useState<any>(0)
+    const [paliwoAmount, setPaliwoAmount] = useState<any>(0)
   
     const {id} = useParams();
     console.log(id)
+    console.log(budget);
 
     useEffect(()=>{
         const expensesTotal = budget?.expenses.reduce((acc:any,curr:any)=>acc + curr.amount,0);
         const savings = Number(budget?.amount - expensesTotal);
         setExpensesTotalAmount(expensesTotal);
         setSavingsTotal(savings);
+
+        const kredytExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Kredyt");
+        const zakupyExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Zakupy");
+        const rachunkiExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Rachunki");
+        const paliwoExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Paliwo");
+
+        const kredytTotal = kredytExpenses?.reduce((acc:any,curr:any) => acc + curr.amount,0)
+        const zakupyTotal = zakupyExpenses?.reduce((acc:any,curr:any) => acc + curr.amount,0)
+        const rachunkiTotal = rachunkiExpenses?.reduce((acc:any,curr:any) => acc + curr.amount,0)
+        const paliwoTotal = paliwoExpenses?.reduce((acc:any,curr:any) => acc + curr.amount,0)
+
+        setKredytAmount(kredytTotal);
+        setZakupyAmount(zakupyTotal);
+        setRachunkiAmount(rachunkiTotal);
+        setPaliwoAmount(paliwoTotal);
+
     },[budget])
 
-
+    console.log(kredytAmount,'kredyt');
+    console.log(zakupyAmount,'zakupy');
+    console.log(rachunkiAmount,'rachunki');
+    console.log(paliwoAmount,'paliwo');
      const fetchBudgets = async () => {
             
             const token = localStorage.getItem("authToken");
