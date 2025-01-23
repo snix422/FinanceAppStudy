@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import ExpenseModal from "../components/ExpenseModal";
 import ExpensesList from "../components/ExpensesList";
 import "../styles/BudgetPage.css"
+import CharStatisticSavings from "../components/ChartStatisticsSavings";
+import ChartExpenses from "../components/ChartExpenses";
 
 
 const BudgetPage = () => {
@@ -10,7 +12,7 @@ const BudgetPage = () => {
     const [budget,setBudget] = useState<any>()
     const [error, setError] = useState("")
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-    const [expensenTotalAmount, setExpensesTotalAmount] = useState<any>(0)
+    const [expensesTotalAmount, setExpensesTotalAmount] = useState<any>(0)
     const [savingsTotal, setSavingsTotal] = useState<any>(0)
     const [kredytAmount, setKredytAmount] = useState<any>(0)
     const [zakupyAmount, setZakupyAmount] = useState<any>(0)
@@ -107,7 +109,14 @@ const BudgetPage = () => {
             <h3>Kwota budżetu: {budget.amount}</h3>
             <h3>Oszczędności: {savingsTotal}</h3>
             <button className="add-expense" onClick={openModal}>Dodaj wydatek</button>
+            <div className="statictics-details">
             <ExpensesList expenses={budget?.expenses} budgetId={id} refreshBudgets={fetchBudgets} />
+            <div className="charts">
+            <CharStatisticSavings budget={budget.amount} savings={savingsTotal} expenses={expensesTotalAmount} />
+            <ChartExpenses kredyt={kredytAmount} zakupy={zakupyAmount} rachunki={rachunkiAmount} paliwo={paliwoAmount} />
+            </div>
+            </div>
+            
             {isOpenModal ? <ExpenseModal isOpen={isOpenModal} close={setIsOpenModal} budgetId={id} refreshExpenses={fetchBudgets} /> : null}
             <Link to={"/"}>Powrót na stronę główną</Link>
         </main>

@@ -59,3 +59,13 @@
     transform: scale(1.05);
     background: linear-gradient(135deg, #2c82a1, #206a8a);
 }
+
+.statistics-details {
+    display: flex;
+    justify-content: space-around;
+}
+
+.charts {
+    display: flex;
+    justify-content: space-evenly;
+}
