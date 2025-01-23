@@ -5,6 +5,8 @@ import { Chart as ChartJS, registerables } from 'chart.js';
 const CharStatisticSavings = (props:any) => {
     ChartJS.register(...registerables);
     return(
+        <div style={{width:'50%',height:"20vh"}}>
+        <h2>Podsumowanie budżetu</h2>
         <Doughnut data={{
             labels:["Przychody","Wydatki","Zaoszczędzone pieniądze"],
             datasets:[{
@@ -19,6 +21,7 @@ const CharStatisticSavings = (props:any) => {
             maintainAspectRatio:false
         }}>
         </Doughnut>  
+        </div>
     )
 }
 
