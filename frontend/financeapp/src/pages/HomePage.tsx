@@ -18,7 +18,7 @@ const HomePage = () => {
    
     return(
         <main className="homepage">
-           <h1 className="homepage-title">Strona główna</h1>
+           <h1 className="homepage-title">Aplikacja do zarządzania budżetem</h1>
            {<div className="homepage-links">
             <Link to={'/signIn'} className="homepage-link">Logowanie</Link>
             <Link to={'/signUp'} className="homepage-link">Rejestracja</Link>
