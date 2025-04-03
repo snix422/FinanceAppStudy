@@ -1,5 +1,6 @@
 ﻿using FinanceAppWebApi.Data;
 using FinanceAppWebApi.Entities;
+using FinanceAppWebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,19 +10,17 @@ namespace FinanceAppWebApi.Controllers
     [Route("api/categories")]
     public class CategoriesController : Controller
     {
-        private readonly FinanceAppDbContext _context;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(FinanceAppDbContext context)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
         [HttpGet("/all")]
         public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories()
         {
-            var categories = await _context.Categories.ToListAsync();
-
-            if(categories == null) return NotFound("Nie znaleziono kategorii");
+            var categories = _categoryService.GetAllCategories(); 
 
             return Ok(categories);
         }
@@ -29,9 +28,7 @@ namespace FinanceAppWebApi.Controllers
         [HttpGet("category/{id}")]
         public async Task<ActionResult<Category>> GetCategoryById(int id)
         {
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-
-            if (category == null) return NotFound("Nie znaleziono kategorii");
+            var category = _categoryService.GetCategoryById(id);
 
             return Ok(category);
         }

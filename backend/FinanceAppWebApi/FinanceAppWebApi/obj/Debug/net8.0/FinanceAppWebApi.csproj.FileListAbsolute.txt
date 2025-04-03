@@ -169,3 +169,9 @@ C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\Finance
 C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\obj\Debug\net8.0\ref\FinanceAppWebApi.dll
 C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\nlog.config
+C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\NLog.dll
+C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\NLog.Extensions.Logging.dll
+C:\Users\mariu\Documents\GitHub\FinanceAppStudy\backend\FinanceAppWebApi\FinanceAppWebApi\bin\Debug\net8.0\NLog.Web.AspNetCore.dll

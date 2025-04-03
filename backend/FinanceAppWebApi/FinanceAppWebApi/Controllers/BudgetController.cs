@@ -8,204 +8,90 @@ using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using FinanceAppWebApi.Entities;
 using BudgetDTO = FinanceAppWebApi.DTOs.BudgetDTO;
+using FinanceAppWebApi.Services;
+using FinanceAppWebApi.Models;
 
 
 namespace FinanceAppWebApi.Controllers
 {
     [ApiController]
-    [Route("/api")]
+    [Authorize]
+    [Route("api/budgets")]
     public class BudgetController : Controller
     {
-        private readonly FinanceAppDbContext _context;
-        public BudgetController(FinanceAppDbContext context)
+   
+        private readonly ILogger<BudgetController> _logger;
+        private readonly IBudgetService _budgetService;
+        public BudgetController(ILogger<BudgetController> logger, IBudgetService budgetService)
         {
-            _context = context;
+           
+            _logger = logger;
+            
         }
         private string GetCurrentUserId()
         {
-            // Przykład z użyciem Identity (możesz dostosować to do swojego rozwiązania)
-            return User.FindFirstValue(ClaimTypes.NameIdentifier); // Zwróci ID użytkownika z claims
+            return User.FindFirstValue(ClaimTypes.NameIdentifier); 
         }
 
-        [HttpGet("/user/budgets")]
-       
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Budget>>> GetAllBudgets()
         {
-            var userEmailClaim = User.Claims.First(c => c.Type == ClaimTypes.Email);
-            if (userEmailClaim == null || string.IsNullOrEmpty(userEmailClaim.Value))
-            {
-                return Unauthorized("Email not found in token.");
-            }
+            _logger.LogInformation("Pobieranie wszystkich budżetów...");
+          
+            var userId = int.Parse(GetCurrentUserId());
 
-            var userEmail = userEmailClaim.Value;
-
-            // Pobieranie użytkownika z bazy danych
-            var user = await _context.Users.FirstOrDefaultAsync(i => i.Email == userEmail);
-            if (user == null)
-            {
-                return NotFound("User not found.");
-            }
-
-            // Pobieranie budżetów dla użytkownika
-            /*var budgets = await _context.Budgets
-                .Where(b => b.UserId == user.Id)
-                .Include(b => b.Expenses)
-                .ToListAsync();*/
-
-            var budgets = await _context.Budgets
-                .Where(b => b.UserId == user.Id)
-                .Include(b => b.Expenses)
-        .ThenInclude(e => e.Category)
-    .Select(b => new
-    {
-        Id = b.Id,
-        Name = b.Title,
-        Amount = b.TotalAmount,
-        Expenses = b.Expenses.Select(e => new ExpensesDto
-        {
-            Id = e.Id,
-            Description = e.Description,
-            Amount = e.Amount,
-            CategoryName = e.Category.Title
-        }).ToList()
-    })
-    .ToListAsync();
+            var budgets = _budgetService.GetAllBudgets(userId);
 
             return Ok(budgets);
 
         }
 
-        [HttpGet("/budget/{id}")]
+        /*[HttpGet("/budget/{id}")]
         public async Task<ActionResult<BudgetDto>> GetBudgetById(int id)
         {
-
+            _logger.LogInformation("Pobieranie budżetu po ID");
             var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
             if(userId == null)
             {
                 return Unauthorized("Użytkownik nie jest zalogowany");
             }
-            if (!int.TryParse(userId.Value, out int idValue))
-            {
-                return BadRequest("Identyfikator użytkownika jest nieprawidłowy");
-            }
+           
 
-            var budget = await _context.Budgets
-                            .Where(b => b.Id == id &&  b.UserId == idValue)
-                            .Include(b => b.Expenses)
-                            .ThenInclude(e => e.Category)
-                            .Select(b => new BudgetDto
-                            {
-                                Id = b.Id,
-                                Name = b.Title,
-                                Amount = b.TotalAmount,
-                                Expenses = b.Expenses.Select(e => new ExpensesDto
-                                {
-                                    Id = e.Id,
-                                    Description = e.Description,
-                                    Amount = e.Amount,
-                                    CategoryName = e.Category.Title
-                                }).ToList()
-                            })
-                            .FirstOrDefaultAsync();
+           
 
-            if (budget == null) return NotFound("Nie znaleziono wybranego budżetu");
 
-            Console.WriteLine(budget);
+            //return Ok(budget);
+        }*/
 
-            return Ok(budget);
-        }
-
-        [HttpGet("user/{id}/budget")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<BudgetDto>> GetBudgetByUserId(int id)
         {
-          
 
-            var budget = await _context.Budgets
-                            .Where(b => b.UserId == id)
-                            .Include(b => b.Expenses)
-                            .ThenInclude(e => e.Category)
-                            .Select(b => new BudgetDto
-                            {
-                                Id = b.Id,
-                                Name = b.Title,
-                                Amount = b.TotalAmount,
-                                Expenses = b.Expenses.Select(e => new ExpensesDto
-                                {
-                                    Id = e.Id,
-                                    Description = e.Description,
-                                    Amount = e.Amount,
-                                    CategoryName = e.Category.Title
-                                }).ToList()
-                            })
-                            .ToListAsync();
+            var userId = int.Parse(GetCurrentUserId());
 
-            if (budget == null) return NotFound("Nie znaleziono wybranego budżetu");
-
-            Console.WriteLine(budget);
+            var budget = _budgetService.GetBudgetById(id,userId);
 
             return Ok(budget);
         }
 
-        [HttpPost("/budget/create")]
-        public async Task<ActionResult<Budget>> CreateBudget([FromBody] BudgetDTO budget)
+        [HttpPost]
+        public async Task<ActionResult<Budget>> CreateBudget([FromBody] CreateBudgetDTO budget)
         {
-            if (!DateTime.TryParse(budget.StartDate, out var startDate))
-            {
-                return BadRequest("Invalid start date format.");
-            }
-            if (!DateTime.TryParse(budget.EndDate, out var endDate))
-            {
-                return BadRequest("Invalid end date format.");
-            }
-           if (!decimal.TryParse(budget.TotalAmount, out var totalAmount))
-            {
-                return BadRequest("Invalid total amount format.");
-            }
-
-            if (endDate < startDate)
-            {
-                return BadRequest("End date must be after start date.");
-            }
-
+            _logger.LogInformation("Tworzenie budżetu...");
+           
             var userId = int.Parse(GetCurrentUserId());
 
-            if (userId == null)
-            {
-                return Unauthorized("Użytkownik nie został zalogowany");
-            }
+            var newBudget = _budgetService.CreateBudget(budget,userId);
 
-            var newBudget = new Budget
-            {
-                Title = budget.Title,
-                TotalAmount = totalAmount,
-                StartDate = startDate,
-                EndDate = endDate,
-                UserId = userId,
-            };
-
-            _context.Budgets.Add(newBudget);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetBudgetById), new { id = newBudget.Id }, budget);
+            return CreatedAtAction(nameof(GetBudgetByUserId), new { id = newBudget.Id }, newBudget);
         }
 
-        [HttpDelete("/budget/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBudget(int id)
         {
-            var userId = int.Parse(GetCurrentUserId());
-
-            /*var budget = await _context.Budgets
-                            .Where(b => b.Id == id && b.UserId == userId)
-                            .FirstOrDefaultAsync();*/
-
-            var budget = await _context.Budgets
-                            .Where(b => b.Id == id)
-                            .FirstOrDefaultAsync();
-
-            if (budget == null) return NotFound("Nie znaleziono budżetu");
-
-            _context.Budgets.Remove(budget);
-            await _context.SaveChangesAsync();
+            _logger.LogInformation("Usuwanie budżetu po ID");
+         
+            _budgetService.DeleteBudget(id);
 
             return NoContent();
 

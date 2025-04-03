@@ -1,8 +1,13 @@
+using FinanceAppWebApi;
 using FinanceAppWebApi.Data;
+using FinanceAppWebApi.Middleware;
+using FinanceAppWebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using NLog.Extensions.Logging;
+using NLog.Web;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,8 +21,17 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Logging.AddNLog();
+builder.Services.AddLogging();
 builder.Services.AddDbContext<FinanceAppDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddAutoMapper(typeof(FinanceMappingProfile).Assembly);
+builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<LogginInformationMiddleware>();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
 
 builder.Services.AddCors(options =>
 {
@@ -61,8 +75,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//app.UseHttpsRedirection();
+app.UseMiddleware<LogginInformationMiddleware>();
+app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
