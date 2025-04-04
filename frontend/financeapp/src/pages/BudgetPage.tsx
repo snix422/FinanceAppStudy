@@ -23,7 +23,7 @@ const BudgetPage = () => {
     console.log(id)
     console.log(budget);
 
-    useEffect(()=>{
+   useEffect(()=>{
         const expensesTotal = budget?.expenses.reduce((acc:any,curr:any)=>acc + curr.amount,0);
         const savings = Number(budget?.amount - expensesTotal);
         setExpensesTotalAmount(expensesTotal);
@@ -61,7 +61,7 @@ const BudgetPage = () => {
             }
         
             try {
-                const response = await fetch(`http://localhost:5054/budget/${id}`, {
+                const response = await fetch(`http://localhost:5054/api/budgets/${id}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,

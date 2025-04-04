@@ -17,7 +17,7 @@ const AdminView = () => {
     }
             
     try {
-        const response = await fetch('http://localhost:5054/users', {
+        const response = await fetch('http://localhost:5054/api/auth/users', {
             method: 'GET',
             });
             

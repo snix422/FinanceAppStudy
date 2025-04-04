@@ -18,7 +18,7 @@ const UserPanelAdmin = () => {
         }
                 
         try {
-            const response = await fetch(`http://localhost:5054/api/user/${id}/budget`, {
+            const response = await fetch(`http://localhost:5054/api/budgets/${id}`, {
                 method: 'GET',
                 });
                 
@@ -42,7 +42,7 @@ const UserPanelAdmin = () => {
        
     const deleteBudget = async (idBudget:any) => {
         try {
-            const response = await fetch(`http://localhost:5054/budget/${idBudget}`,{
+            const response = await fetch(`http://localhost:5054/api/budgets/${idBudget}}`,{
                 method:"DELETE",
                 headers:{"Content-Type":"application/json",
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,

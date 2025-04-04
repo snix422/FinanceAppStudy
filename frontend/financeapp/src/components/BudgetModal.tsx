@@ -34,7 +34,7 @@ const BudgetModal = (props:any) => {
     const onSubmit : SubmitHandler<BudgetModalInputs> = async (formData:BudgetModalInputs) => {
         setError("")
         try {
-            const response = await fetch("http://localhost:5054/budget/create",{
+            const response = await fetch("http://localhost:5054/api/budgets",{
                 method:"POST",
                 headers: {
                     "Content-Type": "application/json",

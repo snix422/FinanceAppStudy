@@ -34,7 +34,7 @@ const ExpenseModal = (props:any) => {
         return;
     }
         try {
-            const response = await fetch(`http://localhost:5054/api/${props.budgetId}/expense/create`,{
+            const response = await fetch(`http://localhost:5054/api/budgets/${props.budgetId}/expenses`,{
                 method:"POST",
                 headers:{"Content-Type":"application/json",
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
