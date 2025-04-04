@@ -1,6 +1,6 @@
 import { axiosClient } from "../axiosClient"
 
-export const register = async (newUser : {email:string,password:string}) => {
+export const register = async (newUser : {email:string,password:string, name:string,surname:string}) => {
     try {
         const {data} = await axiosClient.post("/auth/register", newUser);
         return data

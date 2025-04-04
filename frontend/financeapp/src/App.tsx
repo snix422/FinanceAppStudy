@@ -13,10 +13,10 @@ function App() {
 
   const tokenUser = localStorage.getItem("userData");
   const isLoggedIn = !!tokenUser;
+  console.log(tokenUser);
 
   return (
     <div className="App">
-      <BrowserRouter>
         <Routes>
           <Route path="/" element={isLoggedIn ? <RoleBasedLayout /> : <HomePage />} />
           <Route path='/signIn' element={<SignInPage />} />
@@ -24,7 +24,6 @@ function App() {
           <Route path='/budget/:id' element={<BudgetPage />} />
           <Route path='/user/:id' element={<UserPanelAdmin />} />
         </Routes>
-      </BrowserRouter>
     </div>
   );
 }

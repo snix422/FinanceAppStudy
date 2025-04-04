@@ -35,11 +35,11 @@ namespace FinanceAppWebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDTO loginUserDTO)
         {
-            var loginResult = _authService.LoginUser(loginUserDTO);
+            var loginResult = await _authService.LoginUser(loginUserDTO);
             return Ok(loginResult);
         }
 
-        [HttpGet("/users")]
+        [HttpGet("users")]
         public async Task<ActionResult<User>> GetAllUsers()
         {
             var users = await _authService.GetAllUsers();

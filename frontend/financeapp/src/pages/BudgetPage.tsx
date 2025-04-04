@@ -5,12 +5,12 @@ import ExpensesList from "../components/ExpensesList";
 import "../styles/BudgetPage.css"
 import CharStatisticSavings from "../components/ChartStatisticsSavings";
 import ChartExpenses from "../components/ChartExpenses";
+import useBudget from "../hooks/useBudget";
+import useExpenses from "../hooks/useExpenses";
 
 
 const BudgetPage = () => {
 
-    const [budget,setBudget] = useState<any>()
-    const [error, setError] = useState("")
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
     const [expensesTotalAmount, setExpensesTotalAmount] = useState<any>(0)
     const [savingsTotal, setSavingsTotal] = useState<any>(0)
@@ -20,6 +20,8 @@ const BudgetPage = () => {
     const [paliwoAmount, setPaliwoAmount] = useState<any>(0)
   
     const {id} = useParams();
+    const {budget,isLoading,error} = useBudget(Number(id))
+    const {expenses, addExpense} = useExpenses(Number(id))
     console.log(id)
     console.log(budget);
 
@@ -50,51 +52,21 @@ const BudgetPage = () => {
     console.log(zakupyAmount,'zakupy');
     console.log(rachunkiAmount,'rachunki');
     console.log(paliwoAmount,'paliwo');
-     const fetchBudgets = async () => {
-            
-            const token = localStorage.getItem("authToken");
-            console.log("Auth Token:", token);
-        
-            if (!token) {
-                setError("Brak tokenu uwierzytelniającego. Zaloguj się ponownie.");
-                return;
-            }
-        
-            try {
-                const response = await fetch(`http://localhost:5054/api/budgets/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-        
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        setError("Nieautoryzowany dostęp. Zaloguj się ponownie.");
-                    } else {
-                        setError("Problem z pobraniem budżetów.");
-                    }
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-        
-                const data = await response.json();
-                setBudget(data); // Ustawienie danych w stanie
-            } catch (error) {
-                console.error("Błąd podczas pobierania budżetów:", error);
-                setError("Problem z wczytaniem budżetu.");
-            }
-        };
-        
-        useEffect(() => {
-            fetchBudgets();
-        }, []);
+    
 
         const openModal = () => {
             setIsOpenModal(true);
         }
 
-        if(!budget){
+        if(isLoading){
+            return(
+                <main>
+                    <h2>Ładowanie...</h2>
+                </main>
+            )
+        }
+
+        if(error){
             return(
                 <main>
                     <h2>Budżet nie został wczytany</h2>
@@ -110,14 +82,14 @@ const BudgetPage = () => {
             <h3>Oszczędności: {savingsTotal}</h3>
             <button className="add-expense" onClick={openModal}>Dodaj wydatek</button>
             <div className="statictics-details">
-            <ExpensesList expenses={budget?.expenses} budgetId={id} refreshBudgets={fetchBudgets} />
+            <ExpensesList expenses={budget?.expenses} budgetId={id} />
             <div className="charts">
             <CharStatisticSavings budget={budget.amount} savings={savingsTotal} expenses={expensesTotalAmount} />
             <ChartExpenses kredyt={kredytAmount} zakupy={zakupyAmount} rachunki={rachunkiAmount} paliwo={paliwoAmount} />
             </div>
             </div>
             
-            {isOpenModal ? <ExpenseModal isOpen={isOpenModal} close={setIsOpenModal} budgetId={id} refreshExpenses={fetchBudgets} /> : null}
+            {isOpenModal ? <ExpenseModal isOpen={isOpenModal} close={setIsOpenModal} budgetId={id} addExpense={addExpense} /> : null}
             <Link to={"/"}>Powrót na stronę główną</Link>
         </main>
     )

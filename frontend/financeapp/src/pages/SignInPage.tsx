@@ -2,6 +2,8 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/SignInPage.css"
+import { useAuth } from "../hooks/useAuth";
+
 
 interface SignInTypeInputs {
     email:string,
@@ -11,6 +13,7 @@ interface SignInTypeInputs {
 const SignInPage = () => {
     const {register, handleSubmit,formState:{errors},reset} = useForm<SignInTypeInputs>();
     const [loginError, setLoginError] = useState("");
+    const context = useAuth();
     const loginOptions = {
         email:{
             required:"Email jest wymagany"
@@ -19,48 +22,16 @@ const SignInPage = () => {
             required:"Hasło jest wymagane"
         }
     }
-
     const navigate = useNavigate();
-
     const onSubmit : SubmitHandler<SignInTypeInputs> = async (formData:SignInTypeInputs) => {
         setLoginError("")
         try {
-            const response = await fetch("http://localhost:5054/api/auth/login",{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({
-                    email:formData.email,
-                    password:formData.password  
-                })
-            })
-
-            if(!response.ok){
-                const errorData = await response.json();
-                setLoginError(errorData.message);
-                return
-            }
-            const data = await response.json();
-            const { token, name, role } = data;
-
-            console.log(data);
-
-            // Zapisz token i inne dane w localStorage jako JSON
-            localStorage.setItem("authToken", token);
-            localStorage.setItem(
-                "userData",
-                JSON.stringify({
-                    name,
-                    role,
-                })
-            );
-            navigate("/")
-            reset();
+            context.loginUser({email:formData.email, password:formData.password})
         } catch (error) {
-            setLoginError("Wystąpił problem z logowaniem")
             console.log(error)
         }
+        
        
-        console.log(formData);
     }
 
     console.log(loginError)

@@ -3,6 +3,8 @@ import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import "../styles/ExpenseModal.css"
 import closeImg from "../assets/close.png"
+import useExpenses from "../hooks/useExpenses"
+import { Description } from "@mui/icons-material"
 
 interface ExpenseInputs {
     description:string,
@@ -13,6 +15,7 @@ interface ExpenseInputs {
 const ExpenseModal = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<ExpenseInputs>()
     const [error,setError] = useState("")
+
 
     const ExpenseOptions = {
         description:{
@@ -33,33 +36,7 @@ const ExpenseModal = (props:any) => {
         setError("Invalid amount format.");
         return;
     }
-        try {
-            const response = await fetch(`http://localhost:5054/api/budgets/${props.budgetId}/expenses`,{
-                method:"POST",
-                headers:{"Content-Type":"application/json",
-                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                },
-                body:JSON.stringify({
-                   Description:formData.description,
-                   Amount:amount,
-                   Category:formData.category
-                })
-            })
-
-            if(!response.ok){
-                const errorData = await response.json();
-                setError(errorData);
-                return
-            }
-            const data = await response.json();
-            console.log(data);
-            reset();
-            props.close(false);
-            props.refreshExpenses();
-        } catch (error) {
-            setError("Wystąpił problem z logowaniem")
-            console.log(error)
-        }
+        props.addExpense.mutaseAsync({Description:formData.description,Amount:formData.amount,Category:formData.category})
        
         console.log(formData);
     }

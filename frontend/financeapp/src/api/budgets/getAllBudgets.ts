@@ -18,7 +18,7 @@ export const getBudgetById = async (id:number) => {
     }
 }
 
-export const createBudget = async (budget: {Title: string, TotalAmount:string, StartDate:string, EndDate:string }) => {
+export const createBudget = async (budget: {Title: string, TotalAmount:number, StartDate:string, EndDate:string }) => {
     try {
         const {data} = await axiosClient.post(`/budgets/`,budget)
         return data;

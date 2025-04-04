@@ -29,6 +29,7 @@ builder.Services.AddAutoMapper(typeof(FinanceMappingProfile).Assembly);
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<LogginInformationMiddleware>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 

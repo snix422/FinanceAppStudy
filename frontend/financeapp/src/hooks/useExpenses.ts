@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createExpense, getExpensesForBudget, removeExpense } from "../api/expenses/expenses"
 
-const useExpenses = (budgetId:number) => {
+const useExpenses = (budgetId :number) => {
     const queryClient = useQueryClient();
     const {data : expenses , isLoading , error} = useQuery({
         queryKey:['expenses'],
-        queryFn: () => getExpensesForBudget(budgetId)
+        queryFn: () => getExpensesForBudget(budgetId),
+        enabled: !!budgetId
     })
 
     const addExpenseMutation = useMutation({

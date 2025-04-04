@@ -2,6 +2,8 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router-dom";
 import "../styles/SignUpPage.css"
+import { useAuth } from "../hooks/useAuth";
+
 
 interface SignUpTypeInputs  {
     name: string,
@@ -14,7 +16,7 @@ interface SignUpTypeInputs  {
 const SignUpPage = () => {
     const {register, handleSubmit,formState:{errors},reset} = useForm<SignUpTypeInputs>();
     const [registrationError, setRegistrationError] = useState("");
-
+    const context = useAuth();
     const validateOptions = {
         name:{
             required:"Imię jest wymagane"
@@ -39,32 +41,8 @@ const SignUpPage = () => {
             setRegistrationError("Hasła nie są takie same");
             return
         }
-
-        try {
-            const response = await fetch('http://localhost:5054/api/auth/register', {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: formData.name,
-                    surname: formData.surname,
-                    email: formData.email,
-                    password: formData.password,
-                }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                setRegistrationError(errorData.message || "Wystąpił błąd podczas rejestracji");
-                return;
-            }
-
-            const data = await response.json();
-            console.log("Rejestracja zakończona sukcesem", data);
-            reset();
-        } catch (error) {
-            console.error("Błąd podczas rejestracji:", error);
-            setRegistrationError("Nie udało się połączyć z serwerem. Spróbuj ponownie później.");
-        }
+        context.registerUser({email:formData.email,password:formData.password, name:formData.name,surname:formData.surname})
+        
         console.log(formData);
     }
     return (

@@ -10,6 +10,7 @@ using FinanceAppWebApi.Entities;
 using BudgetDTO = FinanceAppWebApi.DTOs.BudgetDTO;
 using FinanceAppWebApi.Services;
 using FinanceAppWebApi.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 
 namespace FinanceAppWebApi.Controllers
@@ -26,6 +27,7 @@ namespace FinanceAppWebApi.Controllers
         {
            
             _logger = logger;
+            _budgetService = budgetService;
             
         }
         private string GetCurrentUserId()
@@ -38,9 +40,14 @@ namespace FinanceAppWebApi.Controllers
         {
             _logger.LogInformation("Pobieranie wszystkich budżetów...");
           
-            var userId = int.Parse(GetCurrentUserId());
+            var userId = GetCurrentUserId();
 
-            var budgets = _budgetService.GetAllBudgets(userId);
+            if (userId == null)
+            {
+                return Unauthorized("Nie udało się pobrać ID użytkownika.");
+            }
+
+            var budgets = await _budgetService.GetAllBudgets(int.Parse(userId));
 
             return Ok(budgets);
 
@@ -83,7 +90,7 @@ namespace FinanceAppWebApi.Controllers
 
             var newBudget = _budgetService.CreateBudget(budget,userId);
 
-            return CreatedAtAction(nameof(GetBudgetByUserId), new { id = newBudget.Id }, newBudget);
+            return Created("","Budżet został stworzony pomyślnie");
         }
 
         [HttpDelete("{id}")]

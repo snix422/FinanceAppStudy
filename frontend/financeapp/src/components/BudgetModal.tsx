@@ -4,6 +4,8 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form"
 import "../styles/BudgetModal.css"
 import closeImg from "../assets/close.png"
+import useBudget from "../hooks/useBudget";
+import useBudgets from "../hooks/useBudgets";
 
 interface BudgetModalInputs {
     title:string,
@@ -15,6 +17,7 @@ interface BudgetModalInputs {
 const BudgetModal = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<BudgetModalInputs>();
     const [error,setError] = useState("")
+    const { addBudget } = useBudgets();
 
     const BudgetOptions = {
         title:{
@@ -33,36 +36,8 @@ const BudgetModal = (props:any) => {
 
     const onSubmit : SubmitHandler<BudgetModalInputs> = async (formData:BudgetModalInputs) => {
         setError("")
-        try {
-            const response = await fetch("http://localhost:5054/api/budgets",{
-                method:"POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Dodanie tokena
-                },
-                body:JSON.stringify({
-                   Title:formData.title,
-                   TotalAmount:formData.price,
-                   StartDate:formData.startBudget,
-                   EndDate:formData.endBudget                  
-                })
-            })
-
-            if(!response.ok){
-                const errorData = await response.json();
-                setError(errorData);
-                return
-            }
-            //const data = await response.json();
-            //console.log(data);
-            //localStorage.setItem("authToken",data)
-            props.closeModal(false);
-            props.refreshBudgets();
-            reset();
-        } catch (error) {
-            setError("Wystąpił problem z logowaniem")
-            console.log(error)
-        }
+       addBudget.mutateAsync({Title:formData.title,TotalAmount:Number(formData.price),
+        StartDate:formData.startBudget,EndDate:formData.endBudget})
        
         console.log(formData);
     }

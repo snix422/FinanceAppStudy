@@ -9,7 +9,7 @@ const useBudgets = () => {
     })
 
     const addBudgetMutation = useMutation({
-        mutationFn:(budget: {Title: string, TotalAmount:string, StartDate:string, EndDate:string }) => createBudget(budget),
+        mutationFn:(budget: {Title: string, TotalAmount:number, StartDate:string, EndDate:string }) => createBudget(budget),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['budgets'] });
           },

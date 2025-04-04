@@ -7,10 +7,7 @@ const HomePage = () => {
   
     const [tokenUser, setTokenUser] = useState<any>(null)
 
-    useEffect(()=>{
-        const token = localStorage.getItem("authToken");
-        setTokenUser(token)
-    },[localStorage.getItem("authToken")])
+   
 
     if(tokenUser){
         return <RoleBasedLayout />

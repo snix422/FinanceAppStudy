@@ -10,9 +10,9 @@ namespace FinanceAppWebApi.Models
         [Range(0.01,double.MaxValue, ErrorMessage = "Kwota budżetu musi być większa niż 0")]
         public decimal TotalAmount { get; set; }
         [Required(ErrorMessage = "Data początku budżetu jest wymagana")]
-        public DateOnly StartDate { get; set; }
+        public string StartDate { get; set; }
         [Required(ErrorMessage = "Data końca budżetu jest wymagana")]
-        public DateOnly EndDate { get; set; }
+        public string EndDate { get; set; }
 
     }
 }

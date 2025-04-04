@@ -13,7 +13,7 @@ namespace FinanceAppWebApi.Services
     public interface IAuthService
     {
         Task<bool> RegisterUser(RegisterUserDTO registerUserDTO);
-        Task<User> LoginUser(LoginUserDTO loginUserDTO);
+        Task<LoginResponseDTO> LoginUser(LoginUserDTO loginUserDTO);
         Task<List<User>> GetAllUsers();    
     }
 
