@@ -30,11 +30,11 @@ namespace FinanceAppWebApi.Controllers
 
        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetAllExpensesForBudget(int budgetId)
+        public async Task<ActionResult<IEnumerable<CreateExpenseDTO>>> GetAllExpensesForBudget(int budgetId)
         {
            var userId = int.Parse(GetCurrentUserId());
 
-           var expenses = _expenseService.GetAllExpensesForBudget(budgetId,userId);
+           var expenses = await _expenseService.GetAllExpensesForBudget(budgetId,userId);
 
            return Ok(expenses);
         }
@@ -45,7 +45,7 @@ namespace FinanceAppWebApi.Controllers
         {
             var userId = int.Parse(GetCurrentUserId());
             
-            var newExpense = _expenseService.CreateExpense(budgetId, userId, expenseDTO);
+            var newExpense = await _expenseService.CreateExpense(budgetId, userId, expenseDTO);
 
             return Created("", newExpense);
         }
@@ -55,7 +55,7 @@ namespace FinanceAppWebApi.Controllers
         {
             var userId = int.Parse(GetCurrentUserId());
 
-            _expenseService.DeleteExpense(budgetId,userId,expenseId);
+            await _expenseService.DeleteExpense(budgetId,userId,expenseId);
 
             return NoContent();
         }

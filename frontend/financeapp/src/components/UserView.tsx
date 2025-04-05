@@ -8,7 +8,7 @@ const UserView = () => {
 
         const [isOpenModal, setIsOpenModal] = useState(false)
         const {budgets,isLoading,error} = useBudgets();
-        console.log(budgets,'budgets');
+       
         const toggleModal = () => {
             setIsOpenModal(prev => !prev);
         }

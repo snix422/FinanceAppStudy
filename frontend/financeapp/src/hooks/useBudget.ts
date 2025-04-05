@@ -3,9 +3,9 @@ import { getBudgetById } from "../api/budgets/getAllBudgets"
 
 const useBudget = (id:number) => {
     const {data : budget, isLoading, error } = useQuery({
-        queryKey:['budget'],
+        queryKey:['budget',id],
         queryFn: () => getBudgetById(id),
-        enabled:!!id
+        enabled: !!id
     })
 
     return{

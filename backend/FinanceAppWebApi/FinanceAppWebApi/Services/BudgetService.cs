@@ -37,8 +37,10 @@ namespace FinanceAppWebApi.Services
         {
             var budgets = await _dbContext.Budgets
     .Where(b => b.UserId == userId)
+    .Include(u => u.User)
     .Include(b => b.Expenses)
         .ThenInclude(e => e.Category)
+        
     .ToListAsync() ?? new List<Budget>();
 
             if (budgets == null || budgets.Count == 0)
@@ -51,29 +53,18 @@ namespace FinanceAppWebApi.Services
 
         public async Task<BudgetDTO> GetBudgetById(int budgetId, int userId)
         {
+            
             var budget = await _dbContext.Budgets
                             .Where(b => b.Id == budgetId && b.UserId == userId)
+                            .Include(u => u.User)
                             .Include(b => b.Expenses)
                             .ThenInclude(e => e.Category)
-                            .Select(b => new BudgetDto
-                            {
-                                Id = b.Id,
-                                Name = b.Title,
-                                Amount = b.TotalAmount,
-                                Expenses = b.Expenses.Select(e => new ExpensesDto
-                                {
-                                    Id = e.Id,
-                                    Description = e.Description,
-                                    Amount = e.Amount,
-                                    CategoryName = e.Category.Title
-                                }).ToList()
-                            })
                             .FirstOrDefaultAsync();
-
-            if (budget == null) throw new NotFoundException("Nie znaleziono wybranego budżetu");
-
+            Console.WriteLine(budget);
+            if (budget == null) return new BudgetDTO();
+         
             var budgetDTO = _mapper.Map<BudgetDTO>(budget);
-
+            Console.WriteLine(budgetDTO);
             return budgetDTO;
 
         }

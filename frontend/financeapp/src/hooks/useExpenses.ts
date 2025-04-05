@@ -3,23 +3,28 @@ import { createExpense, getExpensesForBudget, removeExpense } from "../api/expen
 
 const useExpenses = (budgetId :number) => {
     const queryClient = useQueryClient();
-    const {data : expenses , isLoading , error} = useQuery({
-        queryKey:['expenses'],
+    const {data : expenses = [] , isLoading , error} = useQuery({
+        queryKey:['expenses',budgetId],
         queryFn: () => getExpensesForBudget(budgetId),
         enabled: !!budgetId
     })
 
     const addExpenseMutation = useMutation({
-        mutationFn: ({ budgetId, expense }: { budgetId: number; expense: { Description: string; Amount: number; Category: string } }) => createExpense(budgetId,expense),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['expenses'] });
+        mutationFn: ( expense : { Description: string; Amount: number; Category: string } ) => createExpense(budgetId,expense),
+        onSuccess: (newExpense) => {
+            console.log(newExpense,'new expense')
+            queryClient.setQueryData(['expenses', budgetId], (oldData: any) => {
+                return [...oldData, newExpense]; 
+            });
+            queryClient.refetchQueries({ queryKey: ['expenses', budgetId] });
         },
     })
 
     const removeExpenseMutation = useMutation({
-        mutationFn:({budgetId, expenseId} : {budgetId:number , expenseId:number}) => removeExpense(budgetId,expenseId),
+        mutationFn:(expenseId:number) => removeExpense(budgetId, expenseId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['expenses'] });
+            queryClient.invalidateQueries({ queryKey: ['expenses', budgetId] });
+           
         },
     })
 

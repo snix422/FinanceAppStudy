@@ -19,22 +19,32 @@ const BudgetPage = () => {
     const [rachunkiAmount, setRachunkiAmount] = useState<any>(0)
     const [paliwoAmount, setPaliwoAmount] = useState<any>(0)
   
-    const {id} = useParams();
-    const {budget,isLoading,error} = useBudget(Number(id))
-    const {expenses, addExpense} = useExpenses(Number(id))
+    const { id } = useParams();
+    const numericId = Number(id);
+    const { budget ,isLoading,error} = useBudget(numericId)
+    const { expenses, addExpense , removeExpense} = useExpenses(numericId);
+    
     console.log(id)
-    console.log(budget);
+    console.log(budget,"moj budzet");
+    console.log(budget?.expenses)
+    console.log(addExpense);
+    console.log(expenses,'expenses')
 
    useEffect(()=>{
-        const expensesTotal = budget?.expenses.reduce((acc:any,curr:any)=>acc + curr.amount,0);
-        const savings = Number(budget?.amount - expensesTotal);
+        if(isLoading == true ) return
+        if(!budget || expenses.length == 0) {
+            setSavingsTotal(budget.totalAmount)
+            return
+        }
+        const expensesTotal = expenses.reduce((acc:any,curr:any)=>acc + curr.amount,0);
+        const savings = Number(budget?.totalAmount - expensesTotal);
         setExpensesTotalAmount(expensesTotal);
         setSavingsTotal(savings);
 
-        const kredytExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Kredyt");
-        const zakupyExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Zakupy");
-        const rachunkiExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Rachunki");
-        const paliwoExpenses = budget?.expenses.filter((c:any)=> c.categoryName == "Paliwo");
+        const kredytExpenses = expenses.filter((c:any)=> c.categoryName == "Kredyt");
+        const zakupyExpenses = expenses.filter((c:any)=> c.categoryName == "Zakupy");
+        const rachunkiExpenses = expenses.filter((c:any)=> c.categoryName == "Rachunki");
+        const paliwoExpenses = expenses.filter((c:any)=> c.categoryName == "Paliwo");
 
         const kredytTotal = kredytExpenses?.reduce((acc:any,curr:any) => acc + curr.amount,0)
         const zakupyTotal = zakupyExpenses?.reduce((acc:any,curr:any) => acc + curr.amount,0)
@@ -46,51 +56,36 @@ const BudgetPage = () => {
         setRachunkiAmount(rachunkiTotal);
         setPaliwoAmount(paliwoTotal);
 
-    },[budget])
+    },[budget,expenses])
 
-    console.log(kredytAmount,'kredyt');
-    console.log(zakupyAmount,'zakupy');
-    console.log(rachunkiAmount,'rachunki');
-    console.log(paliwoAmount,'paliwo');
-    
 
         const openModal = () => {
             setIsOpenModal(true);
         }
 
-        if(isLoading){
-            return(
-                <main>
-                    <h2>Ładowanie...</h2>
-                </main>
-            )
-        }
+        if (!id || isNaN(numericId)) return <p>Nieprawidłowe ID budżetu</p>;
+        if (isLoading) return <p>Ładowanie budżetu...</p>;
+        if (error) return <p>Wystąpił błąd podczas ładowania budżetu</p>;
+      
 
-        if(error){
-            return(
-                <main>
-                    <h2>Budżet nie został wczytany</h2>
-                </main>
-            )
-        }
-
-        console.log(budget)
+       
     return(
         <main className="budget-container">
-            <h2>Nazwa budżetu: {budget.name}</h2>
-            <h3>Kwota budżetu: {budget.amount}</h3>
-            <h3>Oszczędności: {savingsTotal}</h3>
+            <h2>Nazwa budżetu: {budget.title}</h2>
+            <h3>Kwota budżetu: {budget.totalAmount}</h3>
+            {expenses ? <h3>Oszczędności: {savingsTotal}</h3> : null }
             <button className="add-expense" onClick={openModal}>Dodaj wydatek</button>
+            {expenses.length > 0 && 
             <div className="statictics-details">
-            <ExpensesList expenses={budget?.expenses} budgetId={id} />
+            <ExpensesList expenses={expenses} budgetId={id} remove={removeExpense} />
             <div className="charts">
             <CharStatisticSavings budget={budget.amount} savings={savingsTotal} expenses={expensesTotalAmount} />
             <ChartExpenses kredyt={kredytAmount} zakupy={zakupyAmount} rachunki={rachunkiAmount} paliwo={paliwoAmount} />
             </div>
-            </div>
-            
+            </div>}
+            <Link to="/">Powrót na stronę główną</Link>
             {isOpenModal ? <ExpenseModal isOpen={isOpenModal} close={setIsOpenModal} budgetId={id} addExpense={addExpense} /> : null}
-            <Link to={"/"}>Powrót na stronę główną</Link>
+            
         </main>
     )
 }

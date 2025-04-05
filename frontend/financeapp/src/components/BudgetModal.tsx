@@ -40,6 +40,7 @@ const BudgetModal = (props:any) => {
         StartDate:formData.startBudget,EndDate:formData.endBudget})
        
         console.log(formData);
+        props.closeModal()
     }
 
     return(

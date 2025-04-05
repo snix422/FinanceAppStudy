@@ -8,17 +8,16 @@ import SignUpPage from './pages/SignUpPage';
 import BudgetPage from './pages/BudgetPage';
 import UserPanelAdmin from './pages/UserPanelAdmin';
 import RoleBasedLayout from './pages/RoleBasedLayout';
+import { useAuth } from './hooks/useAuth';
 
 function App() {
 
-  const tokenUser = localStorage.getItem("userData");
-  const isLoggedIn = !!tokenUser;
-  console.log(tokenUser);
+  const context = useAuth();
 
   return (
     <div className="App">
         <Routes>
-          <Route path="/" element={isLoggedIn ? <RoleBasedLayout /> : <HomePage />} />
+          <Route path="/" element={context.user ? <RoleBasedLayout /> : <HomePage />} />
           <Route path='/signIn' element={<SignInPage />} />
           <Route path='/signUp' element={<SignUpPage />} />
           <Route path='/budget/:id' element={<BudgetPage />} />

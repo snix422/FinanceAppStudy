@@ -21,7 +21,7 @@ export const createExpense = async (budgetId:number, expense: {Description: stri
 
 export const removeExpense = async (budgetId:number,expenseId:number) => {
     try {
-        const { data } = await axiosClient.post(`/budgets/${budgetId}/expenses/${expenseId}`,);
+        const { data } = await axiosClient.delete(`/budgets/${budgetId}/expenses/${expenseId}`,);
         return data; 
     } catch (error) {
         throw error

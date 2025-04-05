@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using FinanceAppWebApi.Entities;
-using BudgetDTO = FinanceAppWebApi.DTOs.BudgetDTO;
+using BudgetDTO = FinanceAppWebApi.Models.BudgetDTO;
 using FinanceAppWebApi.Services;
 using FinanceAppWebApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -71,13 +71,13 @@ namespace FinanceAppWebApi.Controllers
         }*/
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BudgetDto>> GetBudgetByUserId(int id)
+        public async Task<ActionResult<BudgetDTO>> GetBudgetByUserId(int id)
         {
-
-            var userId = int.Parse(GetCurrentUserId());
-
-            var budget = _budgetService.GetBudgetById(id,userId);
-
+            Console.WriteLine(id);
+            var userId = GetCurrentUserId();
+            Console.WriteLine(userId);
+            var budget = await _budgetService.GetBudgetById(id,int.Parse(userId));
+            Console.WriteLine(budget);
             return Ok(budget);
         }
 

@@ -14,7 +14,7 @@ namespace FinanceAppWebApi.Services
     public interface IExpenseService
     {
         Task<List<ExpenseDTO>> GetAllExpensesForBudget(int budgetId, int userId);
-        Task<Expense> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO);
+        Task<CreateExpenseDTO> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO);
         Task DeleteExpense(int budgetId, int userId, int expenseId);
     }
 
@@ -35,20 +35,24 @@ namespace FinanceAppWebApi.Services
 
             var expenses = await _dbContext.Expenses
                             .Where(e => e.BudgetId == budgetId)
+                            .Include(c => c.Category)
+                            .Include(b => b.Budget)
                             .ToListAsync();
+
+            if (expenses == null) return new List<ExpenseDTO>();
 
             var expensesDTO = _mapper.Map<List<ExpenseDTO>>(expenses);  
 
             return expensesDTO;
         }
 
-        public async Task<Expense> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO) 
+        public async Task<CreateExpenseDTO> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO) 
         {
             var budget = await _dbContext.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == userId);
             if (budget == null) throw new NotFoundException("Nie znaleziono budżetu");
          
             var category = await _dbContext.Categories
-                .FirstOrDefaultAsync(c => c.Title.ToLower() == (expenseDTO.CategoryName).ToLower());
+                .FirstOrDefaultAsync(c => c.Title.ToLower() == (expenseDTO.Category).ToLower());
 
             if (category == null) throw new Exception("Nie znaleziono wybranej kategorii");
            
@@ -64,7 +68,7 @@ namespace FinanceAppWebApi.Services
             _dbContext.Expenses.Add(expense);
             await _dbContext.SaveChangesAsync();
 
-            return expense;
+            return expenseDTO;
         }
 
         public async Task DeleteExpense(int budgetId, int userId, int expenseId)

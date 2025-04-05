@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user]);
 
   // 🔹 Logowanie użytkownika
   const loginMutation = useMutation({

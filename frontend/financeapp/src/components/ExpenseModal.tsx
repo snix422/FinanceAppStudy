@@ -15,7 +15,7 @@ interface ExpenseInputs {
 const ExpenseModal = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<ExpenseInputs>()
     const [error,setError] = useState("")
-
+    
 
     const ExpenseOptions = {
         description:{
@@ -36,9 +36,16 @@ const ExpenseModal = (props:any) => {
         setError("Invalid amount format.");
         return;
     }
-        props.addExpense.mutaseAsync({Description:formData.description,Amount:formData.amount,Category:formData.category})
+    props.addExpense.mutateAsync(
+         {
+          Description: formData.description,
+          Amount: Number(formData.amount),
+          Category: formData.category
+        }
+      );
        
         console.log(formData);
+        props.close(false);
     }
     return(
         <Modal className="modal-container" open={props.isOpen}>

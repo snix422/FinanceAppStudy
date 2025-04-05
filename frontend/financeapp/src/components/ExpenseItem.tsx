@@ -1,13 +1,13 @@
 import { useState } from "react";
 import "../styles/ExpenseItem.css"
 import useBudgets from "../hooks/useBudgets";
+import useExpenses from "../hooks/useExpenses";
 
 
 const ExpenseItem = (props:any) => {
     const [error,setError] = useState("")
-    const {removeBudget} = useBudgets();
-
-    const handleDeleteExpense = () => removeBudget.mutateAsync(props.data.id)
+    
+    const handleDeleteExpense = () => props.remove.mutateAsync(props.data.id)
     
    
     return(
