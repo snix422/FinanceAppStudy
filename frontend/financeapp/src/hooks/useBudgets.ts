@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createBudget, getAllBudgets, removeBudget } from "../api/budgets/getAllBudgets"
+import { createBudget, getAllBudgets, removeBudget } from "../api/budgets/budgets"
 
 const useBudgets = () => {
     const queryClient = useQueryClient();

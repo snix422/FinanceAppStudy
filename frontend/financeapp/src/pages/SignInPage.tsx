@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/SignInPage.css"
 import { useAuth } from "../hooks/useAuth";
 
@@ -22,7 +22,7 @@ const SignInPage = () => {
             required:"Hasło jest wymagane"
         }
     }
-    const navigate = useNavigate();
+    
     const onSubmit : SubmitHandler<SignInTypeInputs> = async (formData:SignInTypeInputs) => {
         setLoginError("")
         try {

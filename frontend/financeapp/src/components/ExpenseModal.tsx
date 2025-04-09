@@ -3,14 +3,14 @@ import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import "../styles/ExpenseModal.css"
 import closeImg from "../assets/close.png"
-import useExpenses from "../hooks/useExpenses"
-import { Description } from "@mui/icons-material"
+
 
 interface ExpenseInputs {
     description:string,
     amount:string,
     category:string
 }
+
 
 const ExpenseModal = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<ExpenseInputs>()
@@ -44,8 +44,8 @@ const ExpenseModal = (props:any) => {
         }
       );
        
-        console.log(formData);
-        props.close(false);
+    
+    props.close(false);
     }
     return(
         <Modal className="modal-container" open={props.isOpen}>
@@ -63,6 +63,7 @@ const ExpenseModal = (props:any) => {
             {errors.category?.message ? <Alert>{errors.amount?.message}</Alert> : null}
             <button type="submit">Dodaj wydatek</button>
             <img className="close-img" src={closeImg} alt="close-icon" onClick={()=>props.close(false)} />
+            {error && <Alert>{error}</Alert>}
         </form>
         </Modal>
     )

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { getBudgetById } from "../api/budgets/getAllBudgets"
+import { getBudgetById } from "../api/budgets/budgets"
 
 const useBudget = (id:number) => {
     const {data : budget, isLoading, error } = useQuery({

@@ -24,12 +24,6 @@ const BudgetPage = () => {
     const { budget ,isLoading,error} = useBudget(numericId)
     const { expenses, addExpense , removeExpense} = useExpenses(numericId);
     
-    console.log(id)
-    console.log(budget,"moj budzet");
-    console.log(budget?.expenses)
-    console.log(addExpense);
-    console.log(expenses,'expenses')
-
    useEffect(()=>{
         if(isLoading == true ) return
         if(!budget || expenses.length == 0) {

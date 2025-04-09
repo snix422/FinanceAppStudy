@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<{ role: string; fullName: string } | null>(null);
   const navigate = useNavigate();
 
-  // 🚀 Sprawdzamy, czy użytkownik jest zalogowany po odświeżeniu strony
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
     if (storedUser) {
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error("Błąd parsowania JSON:", error);
-        logOut(); // Jeśli JSON uszkodzony, wyloguj użytkownika
+        logOut(); 
       }
     }
   }, []);
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user]);
 
-  // 🔹 Logowanie użytkownika
+  
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => login(credentials),
     onSuccess: (data) => {
@@ -44,14 +44,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const userData = { role: data.userRole, fullName: data.fullName };
       localStorage.setItem("token", data.token);
       localStorage.setItem("userData", JSON.stringify(userData));
-      setUser(userData); // ✅ Aktualizujemy stan
+      setUser(userData); 
     },
     onError: (error) => {
       console.error("Błąd logowania:", error);
     },
   });
 
-  // 🔹 Rejestracja użytkownika
+  
   const registerMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string; name: string; surname: string }) => register(credentials),
     onSuccess: (data) => {
@@ -62,18 +62,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
-  // 🔹 Wylogowanie użytkownika
+  
   const logOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userData");
-    setUser(null); // ✅ Aktualizujemy stan
+    setUser(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        loginUser: loginMutation.mutateAsync, // ✅ Używamy mutateAsync dla obsługi błędów
+        loginUser: loginMutation.mutateAsync, 
         registerUser: registerMutation.mutateAsync,
         logOut,
       }}
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// **Hook do pobrania wartości kontekstu**
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

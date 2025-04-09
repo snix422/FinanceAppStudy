@@ -42,8 +42,6 @@ const SignUpPage = () => {
             return
         }
         context.registerUser({email:formData.email,password:formData.password, name:formData.name,surname:formData.surname})
-        
-        console.log(formData);
     }
     return (
         <main className="register-page">

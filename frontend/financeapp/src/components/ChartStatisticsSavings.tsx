@@ -1,8 +1,13 @@
-import { DoughnutController } from "chart.js"
 import { Doughnut } from "react-chartjs-2"
 import { Chart as ChartJS, registerables } from 'chart.js';
 
-const CharStatisticSavings = (props:any) => {
+interface ChartStatisticSavingsProps {
+    budget:number,
+    expenses:number,
+    savings:number
+}
+
+const CharStatisticSavings : React.FC<ChartStatisticSavingsProps> = ({budget,expenses,savings}) => {
     ChartJS.register(...registerables);
     return(
         <div style={{width:'50%',height:"20vh"}}>
@@ -11,7 +16,7 @@ const CharStatisticSavings = (props:any) => {
             labels:["Przychody","Wydatki","Zaoszczędzone pieniądze"],
             datasets:[{
                 label:'Podsumowanie budżetu',
-                data: [props.budget,props.expenses,props.savings],
+                data: [budget,expenses,savings],
                 backgroundColor:['green','red','lightblue']
             }],    
         }}

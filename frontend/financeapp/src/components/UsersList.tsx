@@ -1,11 +1,16 @@
 import UserItem from "./UserItem"
 import "../styles/BudgetsList.css"
+import { IUser } from "../types/Types"
 
-const UsersList = (props:any) => {
+interface UsersListProps {
+    users: IUser[]
+}
+
+const UsersList : React.FC<UsersListProps> = ({users}) => {
     return(
         <div className="budgets-container">
             <div className="budgets-list">
-            {props.users.map((u:any)=> <UserItem data={u} />)}
+            {users.map((u:any)=> <UserItem data={u} />)}
             </div>
         </div>
     )

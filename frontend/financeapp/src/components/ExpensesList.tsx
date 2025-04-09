@@ -1,6 +1,10 @@
 import ExpenseItem from "./ExpenseItem"
 import "../styles/ExpensesList.css"
 
+interface ExpensesList {
+    budgets:any[]
+}
+
 const ExpensesList = (props:any) => {
     return(
         <div className="expenses-container">

@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import BudgetsList from "./BudgetsList"
 import BudgetModal from "./BudgetModal"
 import "../styles/UserView.css"
 import useBudgets from "../hooks/useBudgets"
+import useUsers from "../hooks/useUsers"
 
 const UserView = () => {
 
         const [isOpenModal, setIsOpenModal] = useState(false)
-        const {budgets,isLoading,error} = useBudgets();
-       
+        const {budgets} = useBudgets();
+        const {users, isLoading, error} = useUsers();
+    console.log(users)
+        console.log(budgets)
         const toggleModal = () => {
             setIsOpenModal(prev => !prev);
         }

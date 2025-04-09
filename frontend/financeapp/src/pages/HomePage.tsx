@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import RoleBasedLayout from "./RoleBasedLayout"
 import "../styles/HomePage.css"
 

@@ -1,7 +1,14 @@
 import { Doughnut } from "react-chartjs-2"
 import { Chart as ChartJS, registerables } from 'chart.js';
 
-const ChartExpenses = (props:any) => {
+interface ChartExpensesProps {
+    kredyt:number,
+    zakupy:number,
+    rachunki:number,
+    paliwo:number
+}
+
+const ChartExpenses : React.FC<ChartExpensesProps> = ({kredyt,zakupy,rachunki,paliwo}) => {
     ChartJS.register(...registerables);
     return( 
         <div style={{width:'50%',height:"20vh"}}>
@@ -11,7 +18,7 @@ const ChartExpenses = (props:any) => {
                     labels:["Kredyt","Zakupy","Rachunki","Paliwo"],
                     datasets:[{
                         label:'Wydatki',
-                        data: [props.kredyt,props.zakupy,props.rachunki,props.paliwo],
+                        data: [kredyt,zakupy,rachunki,paliwo],
                         backgroundColor:['green','red','lightblue','yellow']
                     }],    
                 }}

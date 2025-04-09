@@ -1,4 +1,4 @@
-import { Modal } from "@mui/material"
+import { Alert, Modal } from "@mui/material"
 import { title } from "process";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -14,7 +14,12 @@ interface BudgetModalInputs {
     endBudget:string
 }
 
-const BudgetModal = (props:any) => {
+interface BudgetModelProps {
+    isOpen:boolean,
+    closeModal: (type:boolean) => void
+}
+
+const BudgetModal : React.FC<BudgetModelProps> = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<BudgetModalInputs>();
     const [error,setError] = useState("")
     const { addBudget } = useBudgets();
@@ -36,10 +41,20 @@ const BudgetModal = (props:any) => {
 
     const onSubmit : SubmitHandler<BudgetModalInputs> = async (formData:BudgetModalInputs) => {
         setError("")
+        try {
+            addBudget.mutateAsync({Title:formData.title,TotalAmount:Number(formData.price),
+                StartDate:formData.startBudget,EndDate:formData.endBudget})
+               
+            reset();
+            props.closeModal()
+        } catch (error) {
+            console.log(error);
+            
+        }
        addBudget.mutateAsync({Title:formData.title,TotalAmount:Number(formData.price),
         StartDate:formData.startBudget,EndDate:formData.endBudget})
        
-        console.log(formData);
+        reset();
         props.closeModal()
     }
 
@@ -47,9 +62,13 @@ const BudgetModal = (props:any) => {
         <Modal className="modal-container" open={props.isOpen}>
         <form className="form" onSubmit={handleSubmit(onSubmit)}>
             <input type="text" {...register("title",BudgetOptions.title)} placeholder="Wpisz nazwę budżetu" />
+            {errors.title?.message && <Alert>{errors.title.message}</Alert>}
             <input type="text" {...register("price",BudgetOptions.price)} placeholder="Wpisz kwotę dostępnego budżetu" />
+            {errors.price?.message && <Alert>{errors.price.message}</Alert>}
             <input type="date" {...register("startBudget",BudgetOptions.startBudget)} placeholder="Data zaczęcia budżetu" />
+            {errors.startBudget?.message && <Alert>{errors.startBudget.message}</Alert>}
             <input type="date" {...register("endBudget",BudgetOptions.endBudget)}placeholder="Data zakończenia budżetu" />
+            {errors.endBudget?.message && <Alert>{errors.endBudget.message}</Alert>}
             <button type="submit">Dodaj budżet</button>
             <img className="close-img" src={closeImg} alt="close-icon" onClick={()=>props.closeModal(false)} />
         </form>
