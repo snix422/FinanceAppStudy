@@ -1,6 +1,7 @@
 ﻿using FinanceAppWebApi.Data;
 using FinanceAppWebApi.DTOs;
 using FinanceAppWebApi.Entities;
+using FinanceAppWebApi.Models;
 using FinanceAppWebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,13 @@ namespace FinanceAppWebApi.Controllers
     [Route("api/auth")]
     public class AuthController : Controller
     {
-     
+
         private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
         {
-           
-            _authService = authService; 
+
+            _authService = authService;
         }
 
         [HttpPost("register")]
@@ -40,12 +41,12 @@ namespace FinanceAppWebApi.Controllers
         }
 
         [HttpGet("users")]
-        public async Task<ActionResult<User>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers()
         {
             var users = await _authService.GetAllUsers();
             return Ok(users);
         }
 
-        
+
     }
 }

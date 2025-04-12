@@ -5,7 +5,6 @@ const ExpenseItem = (props:any) => {
     
     const handleDeleteExpense = () => props.remove.mutateAsync(props.data.id)
     
-   
     return(
         <div className="expense-item">
             <h2 className="expense-item-desc">{props.data.description}</h2>

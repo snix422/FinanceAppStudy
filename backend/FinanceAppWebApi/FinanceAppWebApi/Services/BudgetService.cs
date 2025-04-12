@@ -16,6 +16,7 @@ namespace FinanceAppWebApi.Services
     {
         Task<List<BudgetDTO>> GetAllBudgets(int userId);
         Task<BudgetDTO> GetBudgetById(int budgetId,int userId);
+        Task<List<BudgetDTO>> GetBudgetsByUserId(int userId);
         Task<CreateBudgetDTO> CreateBudget(CreateBudgetDTO budget, int  userId);
         Task<int> DeleteBudget(int id);
     }
@@ -36,12 +37,12 @@ namespace FinanceAppWebApi.Services
         public async Task<List<BudgetDTO>> GetAllBudgets(int userId)
         {
             var budgets = await _dbContext.Budgets
-    .Where(b => b.UserId == userId)
-    .Include(u => u.User)
-    .Include(b => b.Expenses)
-        .ThenInclude(e => e.Category)
+                .Where(b => b.UserId == userId)
+                .Include(u => u.User)
+                .Include(b => b.Expenses)
+                    .ThenInclude(e => e.Category)
         
-    .ToListAsync() ?? new List<Budget>();
+                .ToListAsync() ?? new List<Budget>();
 
             if (budgets == null || budgets.Count == 0)
                 return new List<BudgetDTO>();
@@ -60,26 +61,36 @@ namespace FinanceAppWebApi.Services
                             .Include(b => b.Expenses)
                             .ThenInclude(e => e.Category)
                             .FirstOrDefaultAsync();
-            Console.WriteLine(budget);
+           
             if (budget == null) return new BudgetDTO();
          
             var budgetDTO = _mapper.Map<BudgetDTO>(budget);
-            Console.WriteLine(budgetDTO);
+            
+            return budgetDTO;
+
+        }
+
+        public async Task<List<BudgetDTO>> GetBudgetsByUserId(int userId)
+        {
+
+            var budget = await _dbContext.Budgets
+                            .Where(b => b.UserId == userId)
+                            .Include(u => u.User)
+                            .Include(b => b.Expenses)
+                            .ThenInclude(e => e.Category)
+                            .ToListAsync();
+
+            if (budget == null) return new List<BudgetDTO>();
+
+            var budgetDTO = _mapper.Map<List<BudgetDTO>>(budget);
+
             return budgetDTO;
 
         }
 
         public async Task<CreateBudgetDTO> CreateBudget(CreateBudgetDTO budget, int userId)
         {
-            /*if (!DateTime.TryParseExact(budget.StartDate, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var startDate))
-            {
-                throw new ArgumentException("Nieprawidłowy format daty rozpoczęcia.");
-            }
-
-            if (!DateTime.TryParseExact(budget.EndDate, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var endDate))
-            {
-                throw new ArgumentException("Nieprawidłowy format daty zakończenia.");
-            }*/
+          
 
             var startDate = Convert.ToDateTime(budget.StartDate);
             var endDate = Convert.ToDateTime(budget.EndDate);
@@ -88,7 +99,7 @@ namespace FinanceAppWebApi.Services
             {
                 throw new ArgumentException("Data zakończenia musi być późniejsza niż data rozpoczęcia.");
             }
-            Console.WriteLine(budget);
+            
             
             var newBudget = new Budget
             {
@@ -116,6 +127,7 @@ namespace FinanceAppWebApi.Services
 
         public async Task<int> DeleteBudget(int id)
         {
+            Console.WriteLine(id);
             var budget = await _dbContext.Budgets
                             .Where(b => b.Id == id)
                             .FirstOrDefaultAsync();

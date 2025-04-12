@@ -9,6 +9,15 @@ export const getAllBudgets = async  () => {
     }
 }
 
+export const getAllBudgetsByUserId = async  (userId: number) => {
+    try {
+        const {data} = await axiosClient.get(`/user/${userId}/budgets`)
+        return data;
+    } catch (error) {
+        throw error
+    }
+}
+
 export const getBudgetById = async (id:number) => {
     try {
         const {data} = await axiosClient.get(`/budgets/${id}`)

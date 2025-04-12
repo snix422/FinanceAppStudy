@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter } from 'react-router-dom';
+import { ErrorProvider } from './hooks/useError';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,9 +16,11 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
     <BrowserRouter>
+    <ErrorProvider>
     <AuthProvider>
     <App />
     </AuthProvider>
+    </ErrorProvider>
     </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>

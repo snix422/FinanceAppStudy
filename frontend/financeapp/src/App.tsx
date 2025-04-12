@@ -12,12 +12,12 @@ import { useAuth } from './hooks/useAuth';
 
 function App() {
 
-  const context = useAuth();
+  const {user} = useAuth();
 
   return (
     <div className="App">
         <Routes>
-          <Route path="/" element={context.user ? <RoleBasedLayout /> : <HomePage />} />
+          <Route path="/" element={user ? <RoleBasedLayout /> : <HomePage />} />
           <Route path='/signIn' element={<SignInPage />} />
           <Route path='/signUp' element={<SignUpPage />} />
           <Route path='/budget/:id' element={<BudgetPage />} />

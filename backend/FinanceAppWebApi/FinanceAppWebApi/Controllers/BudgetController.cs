@@ -53,31 +53,23 @@ namespace FinanceAppWebApi.Controllers
 
         }
 
-        /*[HttpGet("/budget/{id}")]
-        public async Task<ActionResult<BudgetDto>> GetBudgetById(int id)
+        [HttpGet("/api/user/{userId}/budgets")]
+        public async Task<ActionResult<List<BudgetDTO>>> GetBudgetByUserId(int userId)
         {
-            _logger.LogInformation("Pobieranie budżetu po ID");
-            var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
-            if(userId == null)
-            {
-                return Unauthorized("Użytkownik nie jest zalogowany");
-            }
-           
-
-           
-
-
-            //return Ok(budget);
-        }*/
+            
+            var budget = await _budgetService.GetBudgetsByUserId(userId);
+            Console.WriteLine(budget);
+            return Ok(budget);
+        }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BudgetDTO>> GetBudgetByUserId(int id)
+        public async Task<ActionResult<BudgetDTO>> GetBudgetById(int id)
         {
-            Console.WriteLine(id);
+           
             var userId = GetCurrentUserId();
-            Console.WriteLine(userId);
+           
             var budget = await _budgetService.GetBudgetById(id,int.Parse(userId));
-            Console.WriteLine(budget);
+           
             return Ok(budget);
         }
 
@@ -97,8 +89,8 @@ namespace FinanceAppWebApi.Controllers
         public async Task<ActionResult> DeleteBudget(int id)
         {
             _logger.LogInformation("Usuwanie budżetu po ID");
-         
-            _budgetService.DeleteBudget(id);
+            Console.WriteLine(id);
+            await _budgetService.DeleteBudget(id);
 
             return NoContent();
 

@@ -4,6 +4,7 @@
     align-items: center;
     gap: 2rem;
     background: transparent;
+    width: 100vw;
 }
 
 .budget-title {
@@ -14,6 +15,7 @@
 }
 
 .budgets-list {
+    width: 100%;
     display: flex;
     justify-content: center;
     gap: 1rem;

@@ -1,4 +1,5 @@
-﻿using FinanceAppWebApi.Data;
+﻿using AutoMapper;
+using FinanceAppWebApi.Data;
 using FinanceAppWebApi.DTOs;
 using FinanceAppWebApi.Entities;
 using FinanceAppWebApi.Models;
@@ -14,7 +15,7 @@ namespace FinanceAppWebApi.Services
     {
         Task<bool> RegisterUser(RegisterUserDTO registerUserDTO);
         Task<LoginResponseDTO> LoginUser(LoginUserDTO loginUserDTO);
-        Task<List<User>> GetAllUsers();    
+        Task<List<UserDTO>> GetAllUsers();    
     }
 
     
@@ -23,10 +24,13 @@ namespace FinanceAppWebApi.Services
     {
         private readonly FinanceAppDbContext _dbContext;
         private readonly IConfiguration _configuration;
-        public AuthService(FinanceAppDbContext dbContext, IConfiguration configuration) 
+        private readonly IMapper _mapper;
+
+        public AuthService(FinanceAppDbContext dbContext, IConfiguration configuration, IMapper mapper) 
         {
             _dbContext = dbContext;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public async Task<bool> RegisterUser(RegisterUserDTO registerUserDTO) 
@@ -87,10 +91,16 @@ namespace FinanceAppWebApi.Services
 
         }
 
-        public async Task<List<User>> GetAllUsers()
+        public async Task<List<UserDTO>> GetAllUsers()
         {
-            var users = await _dbContext.Users.ToListAsync();
-            return users;
+            var users = await _dbContext
+                .Users
+                .Include(u => u.Role)
+                .ToListAsync();
+
+            var usersDTO = _mapper.Map<List<UserDTO>>(users);
+
+            return usersDTO;
         }
 
 

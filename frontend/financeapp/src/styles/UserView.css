@@ -1,5 +1,3 @@
-/* Stylizacja głównego kontenera */
-
 .userview-page {
     display: flex;
     flex-direction: column;
@@ -7,21 +5,15 @@
     padding: 20px;
     background: linear-gradient(135deg, #f9f9f9, #e8f0fe);
     min-height: 100vh;
+    width: 100vw;
 }
-
-
-/* Stylizacja sekcji budżetów */
 
 .userview-container {
     width: 100%;
-    max-width: 800px;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
 }
-
-
-/* Tytuł sekcji */
 
 .userview-title {
     font-size: 2rem;
@@ -31,18 +23,12 @@
     text-align: center;
 }
 
-
-/* Komunikat o braku budżetów */
-
 .no-budgets-message {
     font-size: 1.5rem;
     color: #999;
     margin: 20px 0;
     text-align: center;
 }
-
-
-/* Stylizacja przycisku "Dodaj budżet" */
 
 .add-budget-button {
     font-size: 1.1rem;
@@ -65,9 +51,6 @@
     background: #317b84;
     transform: scale(0.95);
 }
-
-
-/* Responsywność */
 
 @media (max-width: 600px) {
     .budgets-container {
