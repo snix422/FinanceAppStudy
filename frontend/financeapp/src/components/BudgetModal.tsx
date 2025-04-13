@@ -6,6 +6,7 @@ import "../styles/BudgetModal.css"
 import closeImg from "../assets/close.png"
 import useBudget from "../hooks/useBudget";
 import useBudgets from "../hooks/useBudgets";
+import { useError } from "../hooks/useError";
 
 interface BudgetModalInputs {
     title:string,
@@ -21,7 +22,7 @@ interface BudgetModelProps {
 
 const BudgetModal : React.FC<BudgetModelProps> = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<BudgetModalInputs>();
-    const [error,setError] = useState("")
+    const {error, dispatchError} = useError();
     const { addBudget } = useBudgets();
 
     const BudgetOptions = {
@@ -40,22 +41,17 @@ const BudgetModal : React.FC<BudgetModelProps> = (props:any) => {
     }
 
     const onSubmit : SubmitHandler<BudgetModalInputs> = async (formData:BudgetModalInputs) => {
-        setError("")
+        
         try {
             addBudget.mutateAsync({Title:formData.title,TotalAmount:Number(formData.price),
                 StartDate:formData.startBudget,EndDate:formData.endBudget})
                
             reset();
             props.closeModal()
-        } catch (error) {
-            console.log(error);
-            
+        } catch (error:any) {
+            dispatchError(error.response?.data || "Wystąpił problem z dodaniem danych")
         }
-       addBudget.mutateAsync({Title:formData.title,TotalAmount:Number(formData.price),
-        StartDate:formData.startBudget,EndDate:formData.endBudget})
        
-        reset();
-        props.closeModal()
     }
 
     return(
@@ -70,6 +66,7 @@ const BudgetModal : React.FC<BudgetModelProps> = (props:any) => {
             <input type="date" {...register("endBudget",BudgetOptions.endBudget)}placeholder="Data zakończenia budżetu" />
             {errors.endBudget?.message && <Alert>{errors.endBudget.message}</Alert>}
             <button type="submit">Dodaj budżet</button>
+            {error && <Alert>{error}</Alert>}
             <img className="close-img" src={closeImg} alt="close-icon" onClick={()=>props.closeModal(false)} />
         </form>
         </Modal>

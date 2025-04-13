@@ -13,11 +13,11 @@ const CharStatisticSavings : React.FC<ChartStatisticSavingsProps> = ({budget,exp
         <div style={{width:'50%',height:"20vh"}}>
         <h2>Podsumowanie budżetu</h2>
         <Doughnut data={{
-            labels:["Przychody","Wydatki","Zaoszczędzone pieniądze"],
+            labels:["Wydatki","Zaoszczędzone pieniądze"],
             datasets:[{
                 label:'Podsumowanie budżetu',
                 data: [budget,expenses,savings],
-                backgroundColor:['green','red','lightblue']
+                backgroundColor:['red','lightblue']
             }],    
         }}
         height={200}

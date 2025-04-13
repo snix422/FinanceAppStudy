@@ -3,6 +3,7 @@ import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import "../styles/ExpenseModal.css"
 import closeImg from "../assets/close.png"
+import { useError } from "../hooks/useError"
 
 
 interface ExpenseInputs {
@@ -14,9 +15,8 @@ interface ExpenseInputs {
 
 const ExpenseModal = (props:any) => {
     const {register,handleSubmit,formState:{errors},reset} = useForm<ExpenseInputs>()
-    const [error,setError] = useState("")
+    const {error, dispatchError} = useError();
     
-
     const ExpenseOptions = {
         description:{
             required:"Opis jest wymagany"
@@ -30,22 +30,25 @@ const ExpenseModal = (props:any) => {
     }
 
     const onSubmit : SubmitHandler<ExpenseInputs> = async (formData:ExpenseInputs) => {
-        setError("")
-        const amount = parseFloat(formData.amount.replace(",", "."));
+        
+    const amount = parseFloat(formData.amount.replace(",", "."));
     if (isNaN(amount)) {
-        setError("Invalid amount format.");
+        dispatchError("Nieprawidłowy format ceny");
         return;
     }
-    props.addExpense.mutateAsync(
-         {
-          Description: formData.description,
-          Amount: Number(formData.amount),
-          Category: formData.category
-        }
-      );
-       
-    
-    props.close(false);
+    try {
+        props.addExpense.mutateAsync(
+            {
+             Description: formData.description,
+             Amount: Number(formData.amount),
+             Category: formData.category
+           }
+         );
+         reset();
+         props.close(false);
+    } catch (error:any) {
+        dispatchError(error.respone?.data || "Wystąpił problem z dodaniem wydatku")
+    }
     }
     return(
         <Modal className="modal-container" open={props.isOpen}>
