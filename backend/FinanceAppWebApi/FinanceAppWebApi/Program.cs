@@ -1,6 +1,7 @@
 using FinanceAppWebApi;
 using FinanceAppWebApi.Data;
 using FinanceAppWebApi.Middleware;
+using FinanceAppWebApi.Models;
 using FinanceAppWebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<LogginInformationMiddleware>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 builder.Services.AddCors(options =>

@@ -11,6 +11,7 @@ using BudgetDTO = FinanceAppWebApi.Models.BudgetDTO;
 using FinanceAppWebApi.Services;
 using FinanceAppWebApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Text;
 
 
 namespace FinanceAppWebApi.Controllers
@@ -96,6 +97,42 @@ namespace FinanceAppWebApi.Controllers
 
         }
 
-       
+        [HttpGet("generate-budget-html")]
+        public IActionResult GenerateBudgetHtml()
+        {
+            
+
+            // Generowanie zawartości HTML
+            var htmlContent = $@"
+    <!DOCTYPE html>
+    <html lang='pl'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>Raport budżetowy</title>
+    </head>
+    <body>
+        <h1>Raport Budżetowy</h1>
+        <table border='1'>
+            <tr>
+                <th>Kwota</th>
+                <th>Oszczędności</th>
+                <th>Wydatki</th>
+            </tr>
+            <tr>
+                <td>{budget.Amount} PLN</td>
+                <td>{budget.Savings} PLN</td>
+                <td>{budget.Expenses} PLN</td>
+            </tr>
+        </table>
+        <p>Raport wygenerowany: {DateTime.Now}</p>
+    </body>
+    </html>";
+
+            var fileBytes = Encoding.UTF8.GetBytes(htmlContent);
+            return File(fileBytes, "text/html", "budget-report.html");
+        }
+
+
     }
 }
