@@ -31,11 +31,11 @@ A web application for budget management, helping users track their income and ex
 ### Backend
 - **.NET 7** – RESTful API
 - **Entity Framework Core** – database access
-- **SQL Server – database
+- **SQL Server** – database
 - **JWT** – authentication & authorization
-- **Middlewares
-- **Logger
-- **AutoMapper
+- **Middlewares**
+- **Logger**
+- **AutoMapper**
 
 ---
 
