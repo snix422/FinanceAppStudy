@@ -33,6 +33,9 @@ A web application for budget management, helping users track their income and ex
 - **Entity Framework Core** – database access
 - **SQL Server – database
 - **JWT** – authentication & authorization
+- **Middlewares
+- **Logger
+- **AutoMapper
 
 ---
 
