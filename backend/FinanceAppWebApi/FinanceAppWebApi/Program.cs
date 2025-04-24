@@ -1,3 +1,5 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using FinanceAppWebApi;
 using FinanceAppWebApi.Data;
 using FinanceAppWebApi.Middleware;
@@ -35,6 +37,9 @@ builder.Services.AddScoped<LogginInformationMiddleware>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<IConverter>(new SynchronizedConverter(new PdfTools()));
+
+builder.Services.AddSingleton<CustomPdfTools>();
 
 
 builder.Services.AddCors(options =>
