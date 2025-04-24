@@ -45,7 +45,7 @@ A web application for budget management, helping users track their income and ex
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-repo/FinanceApp.git
+https://github.com/snix422/FinanceAppStudy.git
 cd FinanceApp
 
 ## Run backend
