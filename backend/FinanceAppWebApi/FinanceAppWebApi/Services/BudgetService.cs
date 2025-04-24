@@ -17,7 +17,7 @@ namespace FinanceAppWebApi.Services
         Task<List<BudgetDTO>> GetAllBudgets(int userId);
         Task<BudgetDTO> GetBudgetById(int budgetId,int userId);
         Task<List<BudgetDTO>> GetBudgetsByUserId(int userId);
-        Task<CreateBudgetDTO> CreateBudget(CreateBudgetDTO budget, int  userId);
+        Task<Budget> CreateBudget(CreateBudgetDTO budget, int  userId);
         Task<int> DeleteBudget(int id);
     }
 
@@ -88,7 +88,7 @@ namespace FinanceAppWebApi.Services
 
         }
 
-        public async Task<CreateBudgetDTO> CreateBudget(CreateBudgetDTO budget, int userId)
+        public async Task<Budget> CreateBudget(CreateBudgetDTO budget, int userId)
         {
           
 
@@ -122,7 +122,7 @@ namespace FinanceAppWebApi.Services
             _dbContext.Budgets.Add(newBudget);
             await _dbContext.SaveChangesAsync();
 
-            return result;
+            return newBudget;
         }
 
         public async Task<int> DeleteBudget(int id)
