@@ -7,6 +7,7 @@ A web application for budget management, helping users track their income and ex
 
 ### User
 - ✅ Register and login
+- ✅ Send email when registered succesfully
 - ✅ Create budgets
 - ✅ Add expenses to budgets
 - ✅ Visualizations:
