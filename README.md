@@ -7,6 +7,7 @@ A web application for budget management, helping users track their income and ex
 
 ### User
 - ✅ Register and login
+- ✅ Send email when registered succesfully
 - ✅ Create budgets
 - ✅ Add expenses to budgets
 - ✅ Visualizations:
@@ -31,8 +32,11 @@ A web application for budget management, helping users track their income and ex
 ### Backend
 - **.NET 7** – RESTful API
 - **Entity Framework Core** – database access
-- **SQL Server – database
+- **SQL Server** – database
 - **JWT** – authentication & authorization
+- **Middlewares**
+- **Logger**
+- **AutoMapper**
 
 ---
 
@@ -41,7 +45,7 @@ A web application for budget management, helping users track their income and ex
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-repo/FinanceApp.git
+git clone https://github.com/snix422/FinanceAppStudy.git
 cd FinanceApp
 
 ## Run backend
