@@ -90,7 +90,7 @@ namespace FinanceAppWebApi.Controllers
         public async Task<ActionResult> DeleteBudget(int id)
         {
             _logger.LogInformation("Usuwanie budżetu po ID");
-            Console.WriteLine(id);
+     
             await _budgetService.DeleteBudget(id);
 
             return NoContent();

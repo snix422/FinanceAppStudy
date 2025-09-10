@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using BudgetDTO = FinanceAppWebApi.Models.BudgetDTO;
 using AutoMapper;
+using Xunit.Sdk;
 
 namespace FinanceAppWebApi.Services
 {
@@ -18,7 +19,7 @@ namespace FinanceAppWebApi.Services
         Task<BudgetDTO> GetBudgetById(int budgetId,int userId);
         Task<List<BudgetDTO>> GetBudgetsByUserId(int userId);
         Task<Budget> CreateBudget(CreateBudgetDTO budget, int  userId);
-        Task<int> DeleteBudget(int id);
+        Task DeleteBudget(int id);
     }
 
     public class BudgetService : IBudgetService
@@ -41,11 +42,10 @@ namespace FinanceAppWebApi.Services
                 .Include(u => u.User)
                 .Include(b => b.Expenses)
                     .ThenInclude(e => e.Category)
-        
-                .ToListAsync() ?? new List<Budget>();
+                .ToListAsync();
 
-            if (budgets == null || budgets.Count == 0)
-                return new List<BudgetDTO>();
+            if (!budgets.Any())
+                throw new NotFoundException("Nie znaleziono budżetów");
 
             var budgetsDTO = _mapper.Map<List<BudgetDTO>>(budgets);
 
@@ -62,7 +62,7 @@ namespace FinanceAppWebApi.Services
                             .ThenInclude(e => e.Category)
                             .FirstOrDefaultAsync();
            
-            if (budget == null) return new BudgetDTO();
+            if (budget == null) throw new NotFoundException($"Nie znaleziono budżetu o id: ${budgetId}");
          
             var budgetDTO = _mapper.Map<BudgetDTO>(budget);
             
@@ -80,7 +80,7 @@ namespace FinanceAppWebApi.Services
                             .ThenInclude(e => e.Category)
                             .ToListAsync();
 
-            if (budget == null) return new List<BudgetDTO>();
+            if (!budget.Any()) throw new NotFoundException($"Nie znaleziono budżetów dla użytkownika o id: ${userId}");
 
             var budgetDTO = _mapper.Map<List<BudgetDTO>>(budget);
 
@@ -91,7 +91,6 @@ namespace FinanceAppWebApi.Services
         public async Task<Budget> CreateBudget(CreateBudgetDTO budget, int userId)
         {
           
-
             var startDate = Convert.ToDateTime(budget.StartDate);
             var endDate = Convert.ToDateTime(budget.EndDate);
 
@@ -110,14 +109,7 @@ namespace FinanceAppWebApi.Services
                 UserId = userId,
             };
 
-            var result = new CreateBudgetDTO
-            {
-               
-                Title = newBudget.Title,
-                TotalAmount = newBudget.TotalAmount,
-                StartDate = budget.StartDate,
-                EndDate = budget.EndDate,
-            };
+           
 
             _dbContext.Budgets.Add(newBudget);
             await _dbContext.SaveChangesAsync();
@@ -125,9 +117,9 @@ namespace FinanceAppWebApi.Services
             return newBudget;
         }
 
-        public async Task<int> DeleteBudget(int id)
+        public async Task DeleteBudget(int id)
         {
-            Console.WriteLine(id);
+            
             var budget = await _dbContext.Budgets
                             .Where(b => b.Id == id)
                             .FirstOrDefaultAsync();
@@ -136,8 +128,6 @@ namespace FinanceAppWebApi.Services
 
             _dbContext.Budgets.Remove(budget);
             await _dbContext.SaveChangesAsync();
-
-            return id;
         }
     }
 }

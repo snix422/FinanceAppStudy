@@ -38,6 +38,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IConverter>(new SynchronizedConverter(new PdfTools()));
+builder.Services.AddTransient<RestaurantMigrationSettings>();
 
 builder.Services.AddSingleton<CustomPdfTools>();
 
@@ -69,6 +70,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var migrationService = services.GetRequiredService<RestaurantMigrationSettings>();
+    migrationService.updateMigration();
+}
 
 //app.UseCors("AllowLocalhost");
 

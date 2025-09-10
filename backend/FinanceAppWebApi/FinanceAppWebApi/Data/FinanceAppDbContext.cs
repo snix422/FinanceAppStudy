@@ -32,6 +32,10 @@ namespace FinanceAppWebApi.Data
                 .WithMany(c => c.Expenses)
                 .HasForeignKey(e => e.CategoryId);
 
+            modelBuilder.Entity<Budget>()
+                .Property(b => b.Title)
+                .IsRequired();
+
             modelBuilder.Entity<Role>().HasData(
             new Role { Id = 1, Name = "Admin" },
             new Role { Id = 2, Name = "User" }

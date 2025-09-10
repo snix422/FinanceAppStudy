@@ -14,7 +14,7 @@ namespace FinanceAppWebApi.Services
     public interface IExpenseService
     {
         Task<List<ExpenseDTO>> GetAllExpensesForBudget(int budgetId, int userId);
-        Task<CreateExpenseDTO> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO);
+        Task<Expense> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO);
         Task DeleteExpense(int budgetId, int userId, int expenseId);
     }
 
@@ -39,14 +39,20 @@ namespace FinanceAppWebApi.Services
                             .Include(b => b.Budget)
                             .ToListAsync();
 
-            if (expenses == null) return new List<ExpenseDTO>();
+            var budgetWithExpenses = await _dbContext.Budgets
+                .Where(b => b.Id == budgetId && b.UserId == userId)
+                .Include(b => b.Expenses)
+                    .ThenInclude(e => e.Category)
+                .FirstOrDefaultAsync();
+
+            if (expenses == null) throw new NotFoundException("Nie znaleziono wydatku");
 
             var expensesDTO = _mapper.Map<List<ExpenseDTO>>(expenses);  
 
             return expensesDTO;
         }
 
-        public async Task<CreateExpenseDTO> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO) 
+        public async Task<Expense> CreateExpense(int budgetId, int userId, CreateExpenseDTO expenseDTO) 
         {
             var budget = await _dbContext.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == userId);
             if (budget == null) throw new NotFoundException("Nie znaleziono budżetu");
@@ -54,7 +60,7 @@ namespace FinanceAppWebApi.Services
             var category = await _dbContext.Categories
                 .FirstOrDefaultAsync(c => c.Title.ToLower() == (expenseDTO.Category).ToLower());
 
-            if (category == null) throw new Exception("Nie znaleziono wybranej kategorii");
+            if (category == null) throw new NotFoundException("Nie znaleziono wybranej kategorii");
            
             var expense = new Expense
             {
@@ -68,16 +74,27 @@ namespace FinanceAppWebApi.Services
             _dbContext.Expenses.Add(expense);
             await _dbContext.SaveChangesAsync();
 
-            return expenseDTO;
+            return new Expense
+            {
+                Id = expense.Id,
+                Amount = expense.Amount,
+                DateTime = expense.DateTime,
+                BudgetId = expense.BudgetId,
+                CategoryId = category.Id,
+            };
         }
 
         public async Task DeleteExpense(int budgetId, int userId, int expenseId)
         {
-            var budget = await _dbContext.Budgets.FirstOrDefaultAsync(b => b.Id == budgetId && b.UserId == userId);
-            if (budget == null) throw new NotFoundException("Nie znaleziono budżetu");
+            var expense = await _dbContext.Expenses
+               .Include(e => e.Budget)
+               .FirstOrDefaultAsync(e =>
+                    e.Id == expenseId &&
+                    e.BudgetId == budgetId &&
+                    e.Budget.UserId == userId);
 
-            var expense = await _dbContext.Expenses.FirstOrDefaultAsync(e => e.Id == expenseId && e.BudgetId == budgetId);
-            if (expense == null) throw new NotFoundException("Nie znaleziono wydatku");
+            if (expense == null)
+                throw new NotFoundException("Nie znaleziono wydatku lub budżetu");
 
             _dbContext.Expenses.Remove(expense);
             await _dbContext.SaveChangesAsync();
